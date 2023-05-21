@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -37,5 +38,21 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, \Throwable $exception)
+    {
+        if ($request->is('api/*') || $request->wantsJson()) {
+            dump($exception);die;
+            if ($exception instanceof HttpException) {
+                $statusCode = $exception->getStatusCode();
+            } else {
+                $statusCode = 500;
+            }
+
+            return error($exception->getMessage(), $statusCode);
+        }
+
+        return parent::render($request, $exception);
     }
 }

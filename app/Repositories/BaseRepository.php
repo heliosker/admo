@@ -46,9 +46,9 @@ abstract class BaseRepository
     /**
      * Make Model instance
      *
+     * @return Model
      * @throws \Exception
      *
-     * @return Model
      */
     public function makeModel()
     {
@@ -72,7 +72,7 @@ abstract class BaseRepository
     {
         $query = $this->allQuery();
 
-        return $query->paginate($perPage, $columns);
+        return $query->orderBy('id', 'desc')->paginate($perPage, $columns);
     }
 
     /**
@@ -88,7 +88,7 @@ abstract class BaseRepository
         $query = $this->model->newQuery();
 
         if (count($search)) {
-            foreach($search as $key => $value) {
+            foreach ($search as $key => $value) {
                 if (in_array($key, $this->getFieldsSearchable())) {
                     $query->where($key, $value);
                 }
@@ -178,9 +178,9 @@ abstract class BaseRepository
     /**
      * @param int $id
      *
+     * @return bool|mixed|null
      * @throws \Exception
      *
-     * @return bool|mixed|null
      */
     public function delete($id)
     {

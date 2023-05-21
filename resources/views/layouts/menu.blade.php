@@ -5,3 +5,11 @@
         <p>Home</p>
     </a>
 </li>
+<li class="nav-item">
+    <a href="{{ route('tasks.index') }}"
+       class="nav-link {{ Request::is('tasks*') ? 'active' : '' }}">
+        <p>Tasks</p>
+    </a>
+</li>
+
+
