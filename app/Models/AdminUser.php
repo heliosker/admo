@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Eloquent as Model;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * Class AdminUser
@@ -18,10 +20,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $created_at
  * @property string $updated_at
  */
-class AdminUser extends Model
+class AdminUser extends Authenticatable implements JWTSubject
 {
     use SoftDeletes;
-
     use HasFactory;
 
     public $table = 'admin_users';
@@ -63,6 +64,30 @@ class AdminUser extends Model
         'password' => 'required',
         'status' => 'required'
     ];
+
+    /**
+     * 获取用户省份标识
+     *
+     * Date: 2021/6/5
+     * @return mixed
+     * @author George <george@betterde.com>
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * 获取自定义 Claims
+     *
+     * Date: 2021/6/5
+     * @return array
+     * @author George <george@betterde.com>
+     */
+    public function getJWTCustomClaims(): array
+    {
+        return [];
+    }
 
 
 }

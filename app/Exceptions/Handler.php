@@ -2,9 +2,10 @@
 
 namespace App\Exceptions;
 
+use Throwable;
+use Illuminate\Auth\AuthenticationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -43,7 +44,6 @@ class Handler extends ExceptionHandler
     public function render($request, \Throwable $exception)
     {
         if ($request->is('api/*') || $request->wantsJson()) {
-            dump($exception);die;
             if ($exception instanceof HttpException) {
                 $statusCode = $exception->getStatusCode();
             } else {
@@ -54,5 +54,10 @@ class Handler extends ExceptionHandler
         }
 
         return parent::render($request, $exception);
+    }
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        return error('认证失败', 401);
     }
 }
