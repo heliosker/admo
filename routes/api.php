@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthenticationController;
+use App\Http\Controllers\API\ShopsAPIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,13 +21,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-
 Route::group(['prefix' => 'auth'], function () {
     Route::post('sign', [AuthenticationController::class, 'sign'])->middleware('guest');
     Route::post('out', [AuthenticationController::class, 'out'])->middleware('auth:api');
 });
 
-Route::get('store/authorization/callback', [ShopsAPIController::class, 'callback'])->name('auth.callback');
+Route::get('auth/callback', [ShopsAPIController::class, 'callback'])->name('auth.callback');
 
 Route::group(['middleware' => 'auth:api'], function () {
 
@@ -34,7 +34,10 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::resource('tasks', TaskAPIController::class);
 
-    Route::resource('shops', ShopsAPIController::class);
+    Route::get('shops', [ShopsAPIController::class, 'index']);
+
+
+    Route::post('shop/{store}/sync/advertisers', [ShopsAPIController::class, 'syncAdvertisers']);
 
 });
 

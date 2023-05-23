@@ -11,13 +11,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @package App\Models
  * @version May 21, 2023, 3:54 pm UTC
  *
+ * @property integer $parent_id
  * @property integer $advertiser_id
  * @property string $advertiser_name
  * @property boolean $is_valid
  * @property string $account_role
+ * @property string $company
+ * @property string $first_name
+ * @property string $second_name
+ * @property string $access_token
+ * @property string $refresh_token
+ * @property integer $access_token_expires_at
+ * @property integer $refresh_token_expires_at
  * @property string $created_at
  * @property string $updated_at
- * @property integer $has_child
  */
 class Shops extends Model
 {
@@ -31,12 +38,19 @@ class Shops extends Model
     protected $dates = ['deleted_at'];
 
 
-
     public $fillable = [
+        'parent_id',
         'advertiser_id',
         'advertiser_name',
+        'company',
+        'first_name',
+        'second_name',
         'is_valid',
         'account_role',
+        'access_token',
+        'refresh_token',
+        'access_token_expires_at',
+        'refresh_token_expires_at',
         'created_at',
         'updated_at',
         'has_child'
@@ -48,11 +62,11 @@ class Shops extends Model
      * @var array
      */
     protected $casts = [
+        'parent_id' => 'integer',
         'advertiser_id' => 'integer',
         'advertiser_name' => 'string',
-        'is_valid' => 'boolean',
+        'is_valid' => 'int',
         'account_role' => 'string',
-        'has_child' => 'integer'
     ];
 
     /**

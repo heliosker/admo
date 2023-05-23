@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\shops;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class shopsFactory extends Factory
+class ShopsFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
@@ -23,14 +23,11 @@ class shopsFactory extends Factory
     {
         return [
             'advertiser_id' => $this->faker->randomDigitNotNull,
-        'advertiser_name' => $this->faker->word,
-        'is_valid' => $this->faker->word,
-        'account_role' => $this->faker->word,
-        'created_at' => $this->faker->word,
-        'updated_at' => $this->faker->word,
-        'has_child' => $this->faker->randomDigitNotNull,
-        'created_at' => $this->faker->date('Y-m-d H:i:s'),
-        'updated_at' => $this->faker->date('Y-m-d H:i:s')
+            'advertiser_name' => $this->faker->word,
+            'is_valid' => $this->faker->word,
+            'account_role' => $this->faker->word,
+            'created_at' => $this->faker->date('Y-m-d H:i:s'),
+            'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];
     }
 }

@@ -16,11 +16,18 @@ class CreateShopsTable extends Migration
     {
         Schema::create('shops', function (Blueprint $table) {
             $table->id('id');
-            $table->integer('advertiser_id');
-            $table->string('advertiser_name');
-            $table->boolean('is_valid');
-            $table->string('account_role');
-            $table->integer('has_child');
+            $table->integer('parent_id')->default(0);
+            $table->unsignedBigInteger('advertiser_id')->default(0);
+            $table->string('advertiser_name', 255)->default('');
+            $table->string('company', 255)->default('');
+            $table->string('first_name', 255)->default('');
+            $table->string('second_name', 255)->default('');
+            $table->tinyInteger('is_valid')->default(-1);
+            $table->string('account_role', 255)->default('');
+            $table->string('access_token', 255)->default('');
+            $table->unsignedInteger('access_token_expires_at')->default(0);
+            $table->string('refresh_token', 255)->default('');
+            $table->unsignedInteger('refresh_token_expires_at')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
