@@ -38,8 +38,15 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('shops/trees', [ShopsAPIController::class, 'trees']);
 
-    Route::post('shop/{store}/sync/advertisers', [ShopsAPIController::class, 'syncAdvertisers']);
+    // 同步子账号
+    Route::post('shop/{store}/sync/advertisers', [ShopsAPIController::class, 'syncAds']);
+
+    // 同步计划
+    Route::post('advertiser/{id}/sync/ad', [ShopsAPIController::class, 'syncAdvertisers']);
 
 });
 
 
+
+
+Route::resource('ads', App\Http\Controllers\API\AdsAPIController::class);

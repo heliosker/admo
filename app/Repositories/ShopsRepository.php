@@ -71,15 +71,17 @@ class ShopsRepository extends BaseRepository
         $field = ['id','parent_id','advertiser_id','advertiser_name'];
         $shops = Shops::where('parent_id', $parentId)->select($field)->get();
         if ($shops->isNotEmpty()){
-            foreach ($shops->toArray() as $shop){
-               $result[$shop['id']] = $this->renameField($shop,$advIds);
+            foreach ($shops->toArray() as $key=>$shop){
+               $result[$key] = $this->renameField($shop,$advIds);
             }
         }
         return $result;
     }
 
-    public function renameField($arr,$existIds){
+    public function renameField($arr,$existIds): array
+    {
         $data = [];
+        $data['id']=$arr['id'];
         $data['title']=$arr['advertiser_name'];
         $data['value']=$arr['advertiser_id'];
         $data['key']=$arr['advertiser_id'];

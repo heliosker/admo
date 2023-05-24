@@ -41,7 +41,11 @@ class Shops extends Model
     const INVALID = 0;
     const VALID = 1;
 
-    public $fillable = [
+    const ROLE_QIANCHUAN_AGENT = 'PLATFORM_ROLE_QIANCHUAN_AGENT';
+    const ROLE_SHOP_ACCOUNT = 'PLATFORM_ROLE_SHOP_ACCOUNT';
+    const ROLE_ADVERTISER = 'ADVERTISER';
+
+    protected $fillable = [
         'parent_id',
         'advertiser_id',
         'advertiser_name',
@@ -55,9 +59,11 @@ class Shops extends Model
         'access_token_expires_at',
         'refresh_token_expires_at',
         'created_at',
-        'updated_at',
-        'has_child'
+        'updated_at'
     ];
+
+    protected $appends = ['role', 'valid', 'child_num'];
+
 
     /**
      * The attributes that should be casted to native types.
@@ -75,9 +81,41 @@ class Shops extends Model
     /**
      * @return array
      */
-    public function getStatusAttribute(): array
+    public function getRoleAttribute(): array
     {
-        switch ($this->attributes['is_valid']) {
+        $role = $this->attributes['account_role'] ?? null;
+        switch ($role) {
+            case self::ROLE_QIANCHUAN_AGENT:
+                $label = '代理商账户';
+                break;
+            case self::ROLE_SHOP_ACCOUNT:
+                $label = '店铺账户';
+                break;
+            case self::ROLE_ADVERTISER:
+                $label = '广告账户';
+                break;
+            default:
+                $label = '未知类型';
+                break;
+        }
+        return ['account_role' => $role, 'label' => $label];
+    }
+
+    /**
+     * @return int
+     */
+    public function getChildNumAttribute(): int
+    {
+        return self::where('parent_id', $this->attributes['id'])->count();
+    }
+
+    /**
+     * @return array
+     */
+    public function getValidAttribute(): array
+    {
+        $valid = $this->attributes['is_valid'] ?? null;
+        switch ($valid) {
             case self::UNKNOWN:
                 $label = '未知';
                 break;
@@ -90,8 +128,7 @@ class Shops extends Model
             default:
                 $label = '未知状态';
         }
-
-        return ['is_valid' => $this->attributes['is_valid'], 'label' => $label];
+        return ['is_valid' => $valid, 'label' => $label];
     }
 
     /**

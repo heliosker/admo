@@ -67,7 +67,7 @@ class ShopsAPIController extends AppBaseController
         if (!empty($shops))
         {
             foreach ($shops as $key=>$shop){
-                $shops[$key]['children']=$this->shopsRepository->children($key);
+                $shops[$key]['children']=$this->shopsRepository->children($shop['id']);
             }
         }
         return result($shops);

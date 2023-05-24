@@ -48,15 +48,16 @@ class Handler extends ExceptionHandler
 
             if ($exception instanceof HttpException) {
                 $statusCode = $exception->getStatusCode();
-            }else if($exception instanceof ValidationException){
-                $errors =  $exception->errors();
+            } else if ($exception instanceof ValidationException) {
+                $errors = $exception->errors();
                 // 使用 reset 函数获得第一个键名
                 $keys = array_keys($errors);
                 $firstKey = is_array($keys) && !empty($keys) ? reset($keys) : '未知字段Key';
                 $subarray = array_shift($errors);
                 $value = is_array($subarray) && !empty($subarray) ? reset($subarray) : '未知错误值';
-                return error($exception->getMessage()."[$firstKey:$value]",422);
-
+                return error($exception->getMessage() . "[$firstKey:$value]", 422);
+            } else if ($exception instanceof AuthenticationException) {
+                $statusCode = 401;
             } else {
                 $statusCode = 500;
             }
