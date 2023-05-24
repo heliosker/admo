@@ -26,13 +26,14 @@ class UpdateTaskAPIRequest extends APIRequest
     {
         $rules = [
             'name' => 'string|max:50',
-            'adv_id.*' => 'string|max:255',
+            'adv_id' => 'array',
             'peak_price' => 'integer',
             'min_roi' => 'numeric',
             'is_allow_bulk' => 'boolean',
             'is_allow_unbind' => 'boolean',
             'punish' => 'string|in:pause,delete',
             'status' => 'string|in:pause,inProgress',
+            'marketing_goal' => 'string|in:LIVE_PROM_GOODS,VIDEO_PROM_GOODS',
         ];
 
         return $rules;

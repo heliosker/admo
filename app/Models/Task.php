@@ -61,6 +61,11 @@ class Task extends Model
         'status' => 'string'
     ];
 
+    public function scopeOrderById($query)
+    {
+        return $query->orderBy('id', 'desc');
+    }
+
     /**
      * Validation rules
      *
@@ -75,14 +80,8 @@ class Task extends Model
         'is_allow_unbind' => 'required|boolean',
         'punish' => 'required|string|in:pause,delete',
         'status' => 'required|string|in:pause,inProgress',
+        'marketing_goal' => 'required|string|in:LIVE_PROM_GOODS,VIDEO_PROM_GOODS',
     ];
-
-
-
-    public function scopeOrderById($query)
-    {
-        return $query->orderBy('id', 'desc');
-    }
 
     public function setAdvIdAttribute($value)
     {

@@ -51,7 +51,10 @@ class ShopsAPIController extends AppBaseController
 
     public function trees(Request $request)
     {
-        Shops::where('parent_id', 0)->get();
+        $shops = Shops::where('parent_id', 0)->get();
+        if ($shops->isNotEmpty) {
+
+        }
 
     }
 
