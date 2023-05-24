@@ -16,16 +16,19 @@ class CreateTasksTable extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id('id');
-            $table->string('name');
+            $table->string('name',255)->default('');
             $table->string('adv_id');
-            $table->integer('peak_price');
-            $table->float('min_roi');
-            $table->boolean('is_allow_bulk');
+            $table->integer('peak_price')->default(0);
+            $table->float('min_roi')->default(0);
+            $table->boolean('is_allow_bulk')->default(false);
             $table->boolean('is_allow_unbind');
-            $table->string('punish');
-            $table->string('status');
+            $table->string('punish',128)->default('');
+            $table->string('marketing_goal',255)->default('');
+            $table->string('status',60)->default('');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('name');
         });
     }
 

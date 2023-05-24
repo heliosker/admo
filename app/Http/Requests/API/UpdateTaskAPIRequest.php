@@ -42,7 +42,6 @@ class UpdateTaskAPIRequest extends APIRequest
     public function messages()
     {
         return [
-            'name.required' => '请输入任务名称',
             'punish.in' => '触发配置值不正确',
             'status.in' => '任务状态值不正确',
         ];

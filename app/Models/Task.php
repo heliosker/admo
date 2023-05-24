@@ -43,6 +43,7 @@ class Task extends Model
         'is_allow_unbind',
         'punish',
         'status',
+        'marketing_goal',
         'created_at',
         'updated_at'
     ];

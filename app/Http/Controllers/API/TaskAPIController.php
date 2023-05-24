@@ -9,6 +9,7 @@ use App\Models\Task;
 use App\Repositories\TaskRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\DB;
 use Response;
 
 /**
@@ -52,7 +53,6 @@ class TaskAPIController extends AppBaseController
     public function store(CreateTaskAPIRequest $request)
     {
         $input = $request->all();
-
         $task = $this->taskRepository->create($input);
 
         return result($task, 'Task saved successfully');
@@ -99,7 +99,6 @@ class TaskAPIController extends AppBaseController
         }
 
         $task = $this->taskRepository->update($input, $id);
-
         return result($task, 'Task updated successfully');
     }
 

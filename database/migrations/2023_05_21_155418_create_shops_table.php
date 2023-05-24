@@ -30,6 +30,9 @@ class CreateShopsTable extends Migration
             $table->unsignedInteger('refresh_token_expires_at')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('parent_id');
+            $table->index('advertiser_id');
         });
     }
 
