@@ -30,12 +30,13 @@ Route::get('auth/callback', [ShopsAPIController::class, 'callback'])->name('auth
 
 Route::group(['middleware' => 'auth:api'], function () {
 
-    Route::resource('admin_users', AdminUserAPIController::class);
+    Route::resource('admins', AdminUserAPIController::class);
 
     Route::resource('tasks', TaskAPIController::class);
 
     Route::get('shops', [ShopsAPIController::class, 'index']);
 
+    Route::get('shops/trees', [ShopsAPIController::class, 'trees']);
 
     Route::post('shop/{store}/sync/advertisers', [ShopsAPIController::class, 'syncAdvertisers']);
 

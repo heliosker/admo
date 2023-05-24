@@ -49,6 +49,12 @@ class ShopsAPIController extends AppBaseController
         return result($shops, 'Shops retrieved successfully');
     }
 
+    public function trees(Request $request)
+    {
+        Shops::where('parent_id', 0)->get();
+
+    }
+
     /**
      * Store a newly created shops in storage.
      * POST /shops

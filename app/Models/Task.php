@@ -68,7 +68,7 @@ class Task extends Model
      */
     public static $rules = [
         'name' => 'required|string|max:50',
-        'adv_id.*' => 'required|string|max:255',
+        'adv_id' => 'required|array',
         'peak_price' => 'required|integer',
         'min_roi' => 'required|numeric',
         'is_allow_bulk' => 'required|boolean',
