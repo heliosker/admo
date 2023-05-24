@@ -37,6 +37,9 @@ class Shops extends Model
 
     protected $dates = ['deleted_at'];
 
+    const UNKNOWN = -1;
+    const INVALID = 0;
+    const VALID = 1;
 
     public $fillable = [
         'parent_id',
@@ -68,6 +71,28 @@ class Shops extends Model
         'is_valid' => 'int',
         'account_role' => 'string',
     ];
+
+    /**
+     * @return array
+     */
+    public function getStatusAttribute(): array
+    {
+        switch ($this->attributes['is_valid']) {
+            case self::UNKNOWN:
+                $label = '未知';
+                break;
+            case self::INVALID:
+                $label = '授权异常';
+                break;
+            case self::VALID:
+                $label = '授权正常';
+                break;
+            default:
+                $label = '未知状态';
+        }
+
+        return ['is_valid' => $this->attributes['is_valid'], 'label' => $label];
+    }
 
     /**
      * Validation rules

@@ -72,7 +72,7 @@ class AuthenticationController
             'email' => $user->email,
             'token_type' => 'Bearer',
             'access_token' => $token,
-            'expires_in' => config('jwt.ttl') * 60,
+            'expires_in' => config('jwt.ttl') * 24 * 7, // 7days
         ]);
     }
 

@@ -33,11 +33,18 @@ class ShopsAPIController extends AppBaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
-        $shops = $this->shopsRepository->paginate(
-            $request->get('limit')
-        );
+        $advertiserId = $request->get('advertiser_id');
+        $name = $request->get('name');
+        $isValid = $request->get('is_valid');
+        $parentId = $request->get('parent_id');
+
+        $shops = $this->shopsRepository->search($advertiserId, $name, $isValid, $parentId);
+
+//        $shops = $this->shopsRepository->paginate(
+//            $request->get('limit')
+//        );
 
         return result($shops, 'Shops retrieved successfully');
     }
