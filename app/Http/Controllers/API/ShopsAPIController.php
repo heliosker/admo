@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Task;
 use Response;
 use App\Models\shops;
 use Illuminate\Http\Request;
@@ -49,13 +50,27 @@ class ShopsAPIController extends AppBaseController
         return result($shops, 'Shops retrieved successfully');
     }
 
+    /**
+     * Tree
+     *
+     *  title: 'Node1',
+        * value: '0-0',
+        * key: '0-0',
+        * disabled: true,
+        * children: [
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function trees(Request $request)
     {
-        $shops = Shops::where('parent_id', 0)->get();
-        if ($shops->isNotEmpty) {
-
+        $shops = $this->shopsRepository->children();
+        if (!empty($shops))
+        {
+            foreach ($shops as $key=>$shop){
+                $shops[$key]['children']=$this->shopsRepository->children($key);
+            }
         }
-
+        return result($shops);
     }
 
     /**

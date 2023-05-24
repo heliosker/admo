@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Shops;
+use App\Models\Task;
 use App\Repositories\BaseRepository;
 
 /**
@@ -60,6 +61,34 @@ class ShopsRepository extends BaseRepository
 
         return $query->get();
     }
+
+    public function children($parentId=0)
+    {
+        // 监控中的任务ID
+        $advIds = Task::select('adv_id')->get()->pluck('adv_id')->flatten()->all();;
+
+        $result = [];
+        $field = ['id','parent_id','advertiser_id','advertiser_name'];
+        $shops = Shops::where('parent_id', $parentId)->select($field)->get();
+        if ($shops->isNotEmpty()){
+            foreach ($shops->toArray() as $shop){
+               $result[$shop['id']] = $this->renameField($shop,$advIds);
+            }
+        }
+        return $result;
+    }
+
+    public function renameField($arr,$existIds){
+        $data = [];
+        $data['title']=$arr['advertiser_name'];
+        $data['value']=$arr['advertiser_id'];
+        $data['key']=$arr['advertiser_id'];
+        $data['disabled']=in_array($arr['advertiser_id'],$existIds);
+        return $data;
+    }
+
+
+
 
     /**
      * Configure the Model
