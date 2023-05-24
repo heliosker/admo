@@ -37,6 +37,9 @@ class Shops extends Model
 
     protected $dates = ['deleted_at'];
 
+    const MAIN_ACCOUNT = 'main';
+    const SUB_ACCOUNT = 'sub';
+
     const UNKNOWN = -1;
     const INVALID = 0;
     const VALID = 1;
@@ -79,6 +82,19 @@ class Shops extends Model
     ];
 
     /**
+     * 获取当前账户下 Access_token
+     *
+     * @return string
+     */
+    public function getShopAccessToken(): string
+    {
+        if ($this->parent_id != 0) {
+            return self::where('id', $this->attributes['parent_id'])->value('access_token');
+        }
+        return $this->access_token;
+    }
+
+    /**
      * @return array
      */
     public function getRoleAttribute(): array
@@ -95,7 +111,7 @@ class Shops extends Model
                 $label = '广告账户';
                 break;
             default:
-                $label = '未知类型';
+                $label = '未知角色';
                 break;
         }
         return ['account_role' => $role, 'label' => $label];

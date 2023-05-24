@@ -9,8 +9,7 @@ use App\Repositories\BaseRepository;
  * Class AdsRepository
  * @package App\Repositories
  * @version May 24, 2023, 10:29 am UTC
-*/
-
+ */
 class AdsRepository extends BaseRepository
 {
     /**
@@ -54,5 +53,34 @@ class AdsRepository extends BaseRepository
     public function model()
     {
         return Ads::class;
+    }
+
+    /**
+     * @param array $item
+     * @return array
+     */
+    public function getInputFields(array $item): array
+    {
+        return [
+            'ad_id' => $item['ad_id'],
+            'name' => $item['name'],
+            'status' => $item['status'],
+            'opt_status' => $item['opt_status'],
+            'ad_create_time' => $item['ad_create_time'],
+            'ad_modify_time' => $item['ad_modify_time'],
+            'lab_ad_type' => $item['lab_ad_type'],
+            'marketing_goal' => $item['marketing_goal'],
+            // 'marketing_scene' => $item['marketing_scene'],
+            'aweme_id' => $item['aweme_info']['aweme_id'] ?? 0,
+            'aweme_name' => $item['aweme_info']['aweme_name'] ?? '',
+            'aweme_show_id' => $item['aweme_info']['aweme_show_id'] ?? '',
+            'aweme_avatar' => $item['aweme_info']['aweme_avatar'] ?? '',
+            'deep_external_action' => $item['delivery_setting']['deep_external_action'] ?? '',
+            'deep_bid_type' => $item['delivery_setting']['deep_bid_type'] ?? '',
+            'roi_goal' => $item['delivery_setting']['roi_goal'] ?? 0,
+            'cpa_bid' => $item['delivery_setting']['cpa_bid'] ?? 0,
+            'start_time' => $item['delivery_setting']['start_time'],
+            'end_time' => $item['delivery_setting']['end_time'] ?? '',
+        ];
     }
 }

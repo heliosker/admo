@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthenticationController;
 use App\Http\Controllers\API\ShopsAPIController;
+use App\Http\Controllers\API\AdsAPIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,14 +40,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('shops/trees', [ShopsAPIController::class, 'trees']);
 
     // 同步子账号
-    Route::post('shop/{store}/sync/advertisers', [ShopsAPIController::class, 'syncAds']);
+    Route::post('shop/{store}/sync/advertisers', [ShopsAPIController::class, 'syncAdvertisers']);
 
-    // 同步计划
-    Route::post('advertiser/{id}/sync/ad', [ShopsAPIController::class, 'syncAdvertisers']);
+    // 同步子账号下广告计划
+    Route::post('advertiser/{store}/sync/ad', [AdsAPIController::class, 'syncAd']);
 
 });
-
-
 
 
 Route::resource('ads', App\Http\Controllers\API\AdsAPIController::class);

@@ -43,10 +43,6 @@ class ShopsAPIController extends AppBaseController
 
         $shops = $this->shopsRepository->search($advertiserId, $name, $isValid, $parentId);
 
-//        $shops = $this->shopsRepository->paginate(
-//            $request->get('limit')
-//        );
-
         return result($shops, 'Shops retrieved successfully');
     }
 
@@ -54,20 +50,19 @@ class ShopsAPIController extends AppBaseController
      * Tree
      *
      *  title: 'Node1',
-        * value: '0-0',
-        * key: '0-0',
-        * disabled: true,
-        * children: [
+     * value: '0-0',
+     * key: '0-0',
+     * disabled: true,
+     * children: [
      * @param Request $request
      * @return JsonResponse
      */
     public function trees(Request $request)
     {
         $shops = $this->shopsRepository->children();
-        if (!empty($shops))
-        {
-            foreach ($shops as $key=>$shop){
-                $shops[$key]['children']=$this->shopsRepository->children($shop['id']);
+        if (!empty($shops)) {
+            foreach ($shops as $key => $shop) {
+                $shops[$key]['children'] = $this->shopsRepository->children($shop['id']);
             }
         }
         return result($shops);
@@ -209,21 +204,22 @@ class ShopsAPIController extends AppBaseController
             'secret' => config('ocean.secret')
         ]);
 
-        if ($storeRes->status() != 200) {
-            return error('获取店铺信息失败');
+        if ($storeRes->json('code') != 0) {
+            return error('获取店铺信息失败! 原因：' . $storeRes->json('message'));
         }
 
         $stores = $storeRes->json('data.list');
 
         if (is_array($stores) == false) {
-            return error('获取店铺信息失败');
+            return error('获取店铺信息失败! 原因：没有授权任何店铺！');
         }
-
+        $createNum = 0;
+        $updateNum = 0;
         foreach ($stores as $store) {
             /**
              * @var Shops $exists
              */
-            $exists = Shops::where('id', $store['advertiser_id'])->first();
+            $exists = Shops::where('advertiser_id', $store['advertiser_id'])->first();
             $attributes = [
                 'advertiser_id' => $store['advertiser_id'],
                 'advertiser_name' => $store['advertiser_name'],
@@ -236,12 +232,13 @@ class ShopsAPIController extends AppBaseController
             ];
             if ($exists) {
                 $exists->update($attributes);
+                $updateNum += 1;
             } else {
                 Shops::create($attributes);
+                $createNum += 1;
             }
         }
-
-        return result([], '授权成功');
+        return result(['created_num' => $createNum, 'updated_num' => $updateNum], '授权店铺/代理商成功!新增:[' . $createNum . ']个！更新:[' . $updateNum . ']个！');
     }
 
     /**
@@ -263,7 +260,7 @@ class ShopsAPIController extends AppBaseController
         ]), 'application/json')->get('https://ad.oceanengine.com/open_api/v1.0/qianchuan/shop/advertiser/list/');
 
         if ($response->json('code') != 0) {
-            return error('获取店铺关联的广告账号信息失败1');
+            return error('获取店铺关联的广告账号信息失败! 原因：' . $response->json('message'));
         }
 
         $adverIds = $response->json('data.list');
@@ -277,7 +274,7 @@ class ShopsAPIController extends AppBaseController
         ]);
 
         if ($rsp->json('code') != 0) {
-            return error('获取广告账号详细信息失败');
+            return error('获取广告账号详细信息失败! 原因：' . $rsp->json('message'));
         }
 
         $advertisers = $rsp->json('data');
@@ -305,6 +302,6 @@ class ShopsAPIController extends AppBaseController
             }
         }
 
-        return result($result);
+        return result($result, '同步子账号成功!');
     }
 }

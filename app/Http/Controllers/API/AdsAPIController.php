@@ -5,16 +5,17 @@ namespace App\Http\Controllers\API;
 use App\Http\Requests\API\CreateAdsAPIRequest;
 use App\Http\Requests\API\UpdateAdsAPIRequest;
 use App\Models\Ads;
+use App\Models\Shops;
 use App\Repositories\AdsRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\Http;
 use Response;
 
 /**
  * Class AdsController
  * @package App\Http\Controllers\API
  */
-
 class AdsAPIController extends AppBaseController
 {
     /** @var  AdsRepository */
@@ -42,6 +43,60 @@ class AdsAPIController extends AppBaseController
 
         return $this->sendResponse($ads->toArray(), 'Ads retrieved successfully');
     }
+
+    public function syncAd(Request $request, Shops $store)
+    {
+        if ($store->parent_id == 0) {
+            return error('主账号不能同步计划', 422);
+        }
+
+        $rsp = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Access-Token' => $store->getShopAccessToken()
+        ])->withBody(json_encode([
+            'advertiser_id' => $store->advertiser_id,
+            'filtering' => [
+                'marketing_goal' => 'LIVE_PROM_GOODS'
+            ],
+            'page_size' => 200
+        ]), 'application/json')->get('https://ad.oceanengine.com/open_api/v1.0/qianchuan/ad/get/', [
+        ]);
+
+        if ($rsp->json('code') != 0) {
+            return error('获取计划失败！' . $rsp->json('message'));
+        }
+
+        $data = $rsp->json('data');
+
+        $totalNum = $data['page_info']['total_number'];
+        $failNum = count($data['fail_list']);
+        $createdNum = 0;
+        $updatedNum = 0;
+
+        if (count($data['list']) > 0) {
+            foreach ($data['list'] as $item) {
+                $input = $this->adsRepository->getInputFields($item);
+                $exists = Ads::where('ad_id', $input['ad_id'])->first();
+                if ($exists) {
+                    $exists->update($input);
+                    $updatedNum += 1;
+                } else {
+                    $ads = $this->adsRepository->create($input);
+                    $createdNum += 1;
+                }
+            }
+
+        }
+
+        $result = [
+            'total_num' => $totalNum,
+            'fail_num' => $failNum,
+            'created_num' => $createdNum,
+            'updated_num' => $updatedNum
+        ];
+        return result($result, '同步计划成功！');
+    }
+
 
     /**
      * Store a newly created Ads in storage.
@@ -111,9 +166,9 @@ class AdsAPIController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {
