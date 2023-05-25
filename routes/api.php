@@ -2,9 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\AuthenticationController;
-use App\Http\Controllers\API\ShopsAPIController;
 use App\Http\Controllers\API\AdsAPIController;
+use App\Http\Controllers\API\ShopsAPIController;
+use App\Http\Controllers\API\AdminUserAPIController;
+use App\Http\Controllers\API\AlarmLogsAPIController;
+use App\Http\Controllers\API\AuthenticationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +33,7 @@ Route::get('auth/callback', [ShopsAPIController::class, 'callback'])->name('auth
 
 Route::group(['middleware' => 'auth:api'], function () {
 
-    Route::resource('admins', AdminUserAPIController::class);
+    Route::get('admins', [AdminUserAPIController::class, 'index']);
 
     Route::resource('tasks', TaskAPIController::class);
 
@@ -49,7 +51,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     // 同步子账号下广告计划
     Route::post('advertiser/{store}/sync/ad', [AdsAPIController::class, 'syncAd']);
 
+    Route::get('ads', [AdsAPIController::class, 'index']);
+
+    Route::get('alarm_logs', [AlarmLogsAPIController::class, 'index']);
+    
 });
 
 
-Route::resource('ads', App\Http\Controllers\API\AdsAPIController::class);
+Route::resource('tags', App\Http\Controllers\API\TagsAPIController::class);

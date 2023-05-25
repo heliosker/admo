@@ -83,4 +83,26 @@ class AdsRepository extends BaseRepository
             'end_time' => $item['delivery_setting']['end_time'] ?? '',
         ];
     }
+
+
+    public function search($advId, $adName, $aweme, $paginate = true, $perPage = 15)
+    {
+        $query = $this->model->query();
+
+        if ($advId !== null) {
+            $query->where('advertiser_id', $advId);
+        }
+        if ($adName !== null) {
+            $query->where('name', 'like', "%$adName%");
+        }
+        if ($aweme !== null) {
+            $query->where('aweme_name', 'like', "%$aweme%");
+        }
+
+        if ($paginate) {
+            return $query->paginate($perPage);
+        }
+
+        return $query->get();
+    }
 }

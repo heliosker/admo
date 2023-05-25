@@ -33,6 +33,7 @@ class Task extends Model
 
     protected $dates = ['deleted_at'];
 
+    protected $appends = ['adv_list'];
 
     public $fillable = [
         'name',
@@ -93,5 +94,12 @@ class Task extends Model
     {
         return json_decode($value, true);
     }
+
+    public function getAdvListAttribute()
+    {
+        $advId = json_decode($this->attributes['adv_id'], true);
+        return Shops::whereIn('advertiser_id', $advId)->select('id', 'advertiser_id', 'advertiser_name')->get();
+    }
+
 
 }

@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\API\CreateAdsAPIRequest;
-use App\Http\Requests\API\UpdateAdsAPIRequest;
 use App\Models\Ads;
 use App\Models\Shops;
-use App\Repositories\AdsRepository;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Controllers\AppBaseController;
+use Illuminate\Http\Response;
+use App\Repositories\AdsRepository;
 use Illuminate\Support\Facades\Http;
-use Response;
+use App\Http\Requests\API\CreateAdsAPIRequest;
+use App\Http\Requests\API\UpdateAdsAPIRequest;
+use App\Http\Controllers\AppBaseController;
 
 /**
  * Class AdsController
@@ -31,17 +32,17 @@ class AdsAPIController extends AppBaseController
      * GET|HEAD /ads
      *
      * @param Request $request
-     * @return Response
+     * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
-        $ads = $this->adsRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
+        $ads = $this->adsRepository->search(
+            $request->input('adv_id'),
+            $request->input('ad_name'),
+            $request->input('aweme')
         );
 
-        return $this->sendResponse($ads->toArray(), 'Ads retrieved successfully');
+        return result($ads, 'Ads retrieved successfully');
     }
 
     public function syncAd(Request $request, Shops $store)

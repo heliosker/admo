@@ -23,9 +23,9 @@ if (!function_exists('result')) {
                     'items' => $data->items(),
                     'meta' => [
                         'current_page' => $data->currentPage(),
-                        'from' => $data->firstItem(),
+                        // 'from' => $data->firstItem(),
                         'per_page' => $data->perPage(),
-                        'to' => $data->lastItem(),
+                        // 'to' => $data->lastItem(),
                         'last_page' => $data->lastPage(),
                         'total' => $data->total(),
                     ],
