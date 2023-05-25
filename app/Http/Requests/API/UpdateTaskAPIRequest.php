@@ -30,7 +30,7 @@ class UpdateTaskAPIRequest extends APIRequest
             'peak_price' => 'integer',
             'min_roi' => 'numeric',
             'is_allow_bulk' => 'boolean',
-            'is_allow_unbind' => 'boolean',
+            // 'is_allow_unbind' => 'boolean',
             'punish' => 'string|in:pause,delete',
             'status' => 'string|in:pause,inProgress',
             'marketing_goal' => 'string|in:LIVE_PROM_GOODS,VIDEO_PROM_GOODS',

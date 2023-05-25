@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\API;
 
-use App\Models\shops;
+use App\Models\Shops;
 use InfyOm\Generator\Request\APIRequest;
 
-class UpdateshopsAPIRequest extends APIRequest
+class CreateShopsAPIRequest extends APIRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,6 @@ class UpdateshopsAPIRequest extends APIRequest
      */
     public function rules()
     {
-        $rules = shops::$rules;
-        
-        return $rules;
+        return Shops::$rules;
     }
 }

@@ -15,12 +15,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $advertiser_id
  * @property string $advertiser_name
  * @property boolean $is_valid
+ * @property integer $is_allow_unbind
  * @property string $account_role
  * @property string $company
  * @property string $first_name
  * @property string $second_name
  * @property string $access_token
  * @property string $refresh_token
+ * @property string $mark
  * @property integer $access_token_expires_at
  * @property integer $refresh_token_expires_at
  * @property string $created_at
@@ -56,6 +58,8 @@ class Shops extends Model
         'first_name',
         'second_name',
         'is_valid',
+        'is_allow_unbind',
+        'mark',
         'account_role',
         'access_token',
         'refresh_token',
@@ -111,7 +115,7 @@ class Shops extends Model
                 $label = '广告账户';
                 break;
             default:
-                $label = '未知角色';
+                $label = '未知';
                 break;
         }
         return ['account_role' => $role, 'label' => $label];
@@ -142,7 +146,7 @@ class Shops extends Model
                 $label = '授权正常';
                 break;
             default:
-                $label = '未知状态';
+                $label = '未知';
         }
         return ['is_valid' => $valid, 'label' => $label];
     }

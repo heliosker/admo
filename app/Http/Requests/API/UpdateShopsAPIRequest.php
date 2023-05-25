@@ -5,7 +5,7 @@ namespace App\Http\Requests\API;
 use App\Models\shops;
 use InfyOm\Generator\Request\APIRequest;
 
-class CreateshopsAPIRequest extends APIRequest
+class UpdateShopsAPIRequest extends APIRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,6 +24,9 @@ class CreateshopsAPIRequest extends APIRequest
      */
     public function rules()
     {
-        return shops::$rules;
+        return [
+            'mark' => 'string|max:255',
+            'is_allow_unbind' => 'boolean',
+        ];
     }
 }

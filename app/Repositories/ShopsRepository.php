@@ -78,6 +78,13 @@ class ShopsRepository extends BaseRepository
         return $result;
     }
 
+    /**
+     * 映射字段
+     *
+     * @param $arr
+     * @param $existIds
+     * @return array
+     */
     public function renameField($arr,$existIds): array
     {
         $data = [];

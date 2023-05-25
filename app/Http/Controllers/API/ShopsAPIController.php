@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 use App\Repositories\ShopsRepository;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\UpdateshopsAPIRequest;
-use App\Http\Requests\API\CreateshopsAPIRequest;
+use App\Http\Requests\API\CreateShopsAPIRequest;
 
 /**
  * Class shopsController
@@ -72,11 +72,11 @@ class ShopsAPIController extends AppBaseController
      * Store a newly created shops in storage.
      * POST /shops
      *
-     * @param CreateshopsAPIRequest $request
+     * @param CreateShopsAPIRequest $request
      *
      * @return Response
      */
-    public function store(CreateshopsAPIRequest $request)
+    public function store(CreateShopsAPIRequest $request)
     {
         $input = $request->all();
 
@@ -112,9 +112,9 @@ class ShopsAPIController extends AppBaseController
      * @param int $id
      * @param UpdateshopsAPIRequest $request
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function update($id, UpdateshopsAPIRequest $request)
+    public function update($id, UpdateShopsAPIRequest $request): JsonResponse
     {
         $input = $request->all();
 
@@ -122,12 +122,12 @@ class ShopsAPIController extends AppBaseController
         $shops = $this->shopsRepository->find($id);
 
         if (empty($shops)) {
-            return $this->sendError('Shops not found');
+            return error('Shops not found', 404);
         }
 
         $shops = $this->shopsRepository->update($input, $id);
 
-        return $this->sendResponse($shops->toArray(), 'shops updated successfully');
+        return result($shops, 'shops updated successfully');
     }
 
     /**

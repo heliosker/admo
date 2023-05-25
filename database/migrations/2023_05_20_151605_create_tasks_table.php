@@ -21,7 +21,7 @@ class CreateTasksTable extends Migration
             $table->integer('peak_price')->default(0);
             $table->float('min_roi')->default(0);
             $table->boolean('is_allow_bulk')->default(false);
-            $table->boolean('is_allow_unbind');
+            // $table->boolean('is_allow_unbind');
             $table->string('punish',128)->default('');
             $table->string('marketing_goal',255)->default('');
             $table->string('status',60)->default('');

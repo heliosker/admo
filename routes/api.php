@@ -35,7 +35,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::resource('tasks', TaskAPIController::class);
 
+    // 列表
     Route::get('shops', [ShopsAPIController::class, 'index']);
+
+    // 店铺设置
+    Route::put('shops/{id}', [ShopsAPIController::class, 'update']);
 
     Route::get('shops/trees', [ShopsAPIController::class, 'trees']);
 

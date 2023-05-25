@@ -78,7 +78,7 @@ class Task extends Model
         'peak_price' => 'required|integer',
         'min_roi' => 'required|numeric',
         'is_allow_bulk' => 'required|boolean',
-        'is_allow_unbind' => 'required|boolean',
+        // 'is_allow_unbind' => 'required|boolean',
         'punish' => 'required|string|in:pause,delete',
         'status' => 'required|string|in:pause,inProgress',
         'marketing_goal' => 'required|string|in:LIVE_PROM_GOODS,VIDEO_PROM_GOODS',
