@@ -18,7 +18,7 @@ class CreateAlarmLogsTable extends Migration
             $table->id('id');
             $table->integer('task_id')->default(0)->comment('任务ID');
             $table->string('task_name')->default(0)->comment('任务名称');
-            $table->integer('adver_id')->default(0)->comment('广告主ID');
+            $table->bigInteger('adver_id')->default(0)->comment('广告主ID');
             $table->string('adver_name')->default('')->comment('广告主名称');
             $table->integer('is_valid')->default(-1)->comment('授权状态');
             $table->integer('shop_id')->default(0)->comment('主账号ID');
@@ -26,7 +26,7 @@ class CreateAlarmLogsTable extends Migration
             $table->string('ad_name')->default('')->comment('广告名称');
             $table->string('punish_rule')->default('')->comment('处罚规则');
             $table->boolean('exec_result')->default(false)->comment('执行结果');
-            $table->string('type')->default('')->comment('日志类型');
+            $table->tinyInteger('type')->default(1)->comment('日志类型');
             $table->timestamps();
             $table->softDeletes();
         });

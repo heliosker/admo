@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $created_at
  * @property string $updated_at
  */
-class Shops extends Model
+class Shops extends BaseModel
 {
     use SoftDeletes;
 
@@ -84,7 +84,7 @@ class Shops extends Model
         'advertiser_id' => 'integer',
         'advertiser_name' => 'string',
         'is_valid' => 'int',
-        'account_role' => 'string',
+        'account_role' => 'string'
     ];
 
     /**

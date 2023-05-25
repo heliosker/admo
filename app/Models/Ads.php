@@ -38,10 +38,9 @@ class Ads extends Model
     use HasFactory;
 
     public $table = 'ads';
-    
+
 
     protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -89,7 +88,9 @@ class Ads extends Model
         'roi_goal' => 'double',
         'cpa_bid' => 'double',
         'start_time' => 'string',
-        'end_time' => 'string'
+        'end_time' => 'string',
+        'created_at' => 'string',
+        'updated_at' => 'string',
     ];
 
     /**
@@ -98,8 +99,8 @@ class Ads extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
-    
+
 }

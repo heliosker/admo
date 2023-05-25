@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\AlarmLogs;
 use App\Repositories\BaseRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class AlarmLogsRepository
@@ -42,8 +43,14 @@ class AlarmLogsRepository extends BaseRepository
 
     public function search($type, $taskName, $advId, $rule, $startAt, $endAt, $paginate = true, $perPage = 15)
     {
+        DB::enableQueryLog();
+
         $query = $this->model->query();
 
+
+        if ($type !== null) {
+            $query->where('type', $type);
+        }
         if ($taskName !== null) {
             $query->where('task_name', 'like', "%$taskName%");
         }
@@ -63,6 +70,7 @@ class AlarmLogsRepository extends BaseRepository
         if ($paginate) {
             return $query->paginate($perPage);
         }
+//        dd(DB::getQueryLog());
 
         return $query->get();
     }

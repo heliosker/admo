@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $created_at
  * @property string $updated_at
  */
-class Task extends Model
+class Task extends BaseModel
 {
     use SoftDeletes;
 

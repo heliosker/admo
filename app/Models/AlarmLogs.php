@@ -23,18 +23,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $type
  * @property string $updated_at
  */
-class AlarmLogs extends Model
+class AlarmLogs extends BaseModel
 {
     use SoftDeletes;
 
     use HasFactory;
 
     public $table = 'alarm_logs';
-
-
-    protected $dates = ['deleted_at'];
-
-
 
     public $fillable = [
         'task_id',
@@ -45,10 +40,13 @@ class AlarmLogs extends Model
         'ad_name',
         'punish_rule',
         'exec_result',
-        'created_at',
         'type',
+        'created_at',
         'updated_at'
     ];
+
+
+    protected $dates = ['deleted_at'];
 
     /**
      * The attributes that should be casted to native types.
@@ -63,7 +61,9 @@ class AlarmLogs extends Model
         'shop_id' => 'integer',
         'ad_name' => 'string',
         'punish_rule' => 'string',
-        'type' => 'string'
+        'type' => 'integer',
+        'created_at' => 'string',
+        'updated_at' => 'string',
     ];
 
     /**
