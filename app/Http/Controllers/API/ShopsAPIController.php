@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 use App\Repositories\ShopsRepository;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\API\UpdateshopsAPIRequest;
+use App\Http\Requests\API\UpdateShopsAPIRequest;
 use App\Http\Requests\API\CreateShopsAPIRequest;
 
 /**

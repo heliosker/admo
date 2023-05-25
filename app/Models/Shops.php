@@ -36,11 +36,13 @@ class Shops extends Model
 
     public $table = 'shops';
 
-
     protected $dates = ['deleted_at'];
 
     const MAIN_ACCOUNT = 'main';
     const SUB_ACCOUNT = 'sub';
+
+    const ALLOW_BIND = 1;
+    const ALLOW_UNBIND = 0;
 
     const UNKNOWN = -1;
     const INVALID = 0;
