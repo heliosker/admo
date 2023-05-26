@@ -160,17 +160,17 @@ class ShopsAPIController extends AppBaseController
      * Date: 2021/6/5
      * @return JsonResponse
      */
-    public function authorization(): JsonResponse
+    public function authLink(): JsonResponse
     {
         $domain = 'https://qianchuan.jinritemai.com/openapi/qc/audit/oauth.html';
         $query = http_build_query([
             'app_id' => config('ocean.appid'),
             'state' => '',
-            'material_auth' => 1,
-            'redirect_uri' => route('auth.callback'),
-            'rid' => 'ap04083hes'
+            'redirect_uri' => config('ocean.redirect_uri', 'http://admo.helloadmin.cn/#/shops/list'),
+            //'material_auth' => 1,
+            // 'rid' => 'ap04083hes'
         ]);
-        return success([
+        return result([
             'url' => sprintf('%s?%s', $domain, $query)
         ]);
     }
@@ -181,7 +181,7 @@ class ShopsAPIController extends AppBaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function callback(Request $request): JsonResponse
+    public function authorization(Request $request): JsonResponse
     {
         $auth_code = $request->get('auth_code');
 

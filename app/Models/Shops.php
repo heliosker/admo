@@ -38,8 +38,8 @@ class Shops extends BaseModel
 
     protected $dates = ['deleted_at'];
 
-    const MAIN_ACCOUNT = 'main';
-    const SUB_ACCOUNT = 'sub';
+    const MAIN_ACCOUNT = 0;
+    // const SUB_ACCOUNT = 'sub';
 
     const ALLOW_BIND = 1;
     const ALLOW_UNBIND = 0;
@@ -139,7 +139,7 @@ class Shops extends BaseModel
         $valid = $this->attributes['is_valid'] ?? null;
         switch ($valid) {
             case self::UNKNOWN:
-                $label = '未知';
+                $label = '-';
                 break;
             case self::INVALID:
                 $label = '授权异常';
@@ -165,5 +165,14 @@ class Shops extends BaseModel
         'account_role' => 'required:string'
     ];
 
+    public function scopeMainAccount($query)
+    {
+        return $query->where('parent_id', self::MAIN_ACCOUNT);
+    }
+
+    public function scopeSubAccount($query)
+    {
+        return $query->where('parent_id', '!=', self::MAIN_ACCOUNT);
+    }
 
 }

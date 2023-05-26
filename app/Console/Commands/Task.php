@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\Task as TaskModel;
 
 class Task extends Command
 {
@@ -11,14 +12,14 @@ class Task extends Command
      *
      * @var string
      */
-    protected $signature = 'task:name';
+    protected $signature = 'task:process';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = '任务巡查，AD是否违规';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,6 @@ class Task extends Command
      */
     public function handle()
     {
-        return 0;
+        TaskModel::inprogress()->get();
     }
 }

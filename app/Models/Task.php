@@ -28,6 +28,9 @@ class Task extends BaseModel
 
     use HasFactory;
 
+    const STATUS_IN_PROGRESS = 'inProgress';
+    const STATUS_PAUSE = 'pause';
+
     public $table = 'tasks';
 
 
@@ -67,6 +70,12 @@ class Task extends BaseModel
     {
         return $query->orderBy('id', 'desc');
     }
+
+    public function scopeInProgress($query)
+    {
+        return $query->where('status', self::STATUS_IN_PROGRESS);
+    }
+
 
     /**
      * Validation rules

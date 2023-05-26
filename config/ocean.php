@@ -8,4 +8,5 @@
 return [
     'appid' => env('OCEAN_APPID'),
     'secret' => env('OCEAN_SECRET'),
+    'redirect_uri' => env('REDIRECT_URI')
 ];

@@ -30,7 +30,9 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('out', [AuthenticationController::class, 'out'])->middleware('auth:api');
 });
 
-Route::get('auth/callback', [ShopsAPIController::class, 'callback'])->name('auth.callback');
+
+Route::get('auth/callback', [ShopsAPIController::class, 'authLink'])->name('auth.callback');
+Route::get('auth/shops', [ShopsAPIController::class, 'authorization']);
 
 Route::group(['middleware' => 'auth:api'], function () {
 
