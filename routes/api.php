@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AdsAPIController;
 use App\Http\Controllers\API\ShopsAPIController;
+use App\Http\Controllers\API\SubscribeController;
 use App\Http\Controllers\API\AdminUserAPIController;
 use App\Http\Controllers\API\AlarmLogsAPIController;
 use App\Http\Controllers\API\AuthenticationController;
@@ -54,8 +55,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('ads', [AdsAPIController::class, 'index']);
 
     Route::get('alarm_logs', [AlarmLogsAPIController::class, 'index']);
-    
+
 });
 
+// 计划报表
+Route::get('sub_ad_report', [SubscribeController::class, 'adReport']);
 
 Route::resource('tags', App\Http\Controllers\API\TagsAPIController::class);
