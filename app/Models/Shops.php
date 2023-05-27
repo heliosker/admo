@@ -131,7 +131,7 @@ class Shops extends BaseModel
      */
     public function getChildNumAttribute(): int
     {
-        return self::where('parent_id', $this->attributes['id'])->count();
+        return isset($this->attributes['id']) ? self::where('parent_id', $this->attributes['id'])->count() : 0;
     }
 
     /**

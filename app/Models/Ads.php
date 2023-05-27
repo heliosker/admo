@@ -50,6 +50,7 @@ class Ads extends Model
 
     protected $dates = ['deleted_at'];
 
+    protected $appends = ['adv'];
 
     public $fillable = [
         'ad_id',
@@ -81,6 +82,7 @@ class Ads extends Model
      */
     protected $casts = [
         'ad_id' => 'string',
+        'adv_id' => 'string',
         'ad_create_time' => 'string',
         'ad_modify_time' => 'string',
         'lab_ad_type' => 'string',
@@ -110,6 +112,18 @@ class Ads extends Model
     public static $rules = [
 
     ];
+
+    public function getAdvAttribute($value): ?array
+    {
+        if ($shop = Shops::where('advertiser_id', $this->attributes['adv_id'])->select('advertiser_id', 'advertiser_name')->first()) {
+            return [
+                'adv_id' => $shop->advertiser_id,
+                'adv_name' => $shop->advertiser_name,
+            ];
+        }
+
+        return null;
+    }
 
 
 }
