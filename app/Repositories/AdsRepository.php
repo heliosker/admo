@@ -85,18 +85,18 @@ class AdsRepository extends BaseRepository
     }
 
 
-    public function search($advId, $adName, $aweme, $paginate = true, $perPage = 15)
+    public function search($advId, $adId, $adName, $paginate = true, $perPage = 15)
     {
         $query = $this->model->query();
 
         if ($advId !== null) {
-            $query->where('advertiser_id', $advId);
+            $query->where('adv_id', $advId);
+        }
+        if ($adId !== null) {
+            $query->where('ad_id', $adId);
         }
         if ($adName !== null) {
             $query->where('name', 'like', "%$adName%");
-        }
-        if ($aweme !== null) {
-            $query->where('aweme_name', 'like', "%$aweme%");
         }
 
         if ($paginate) {

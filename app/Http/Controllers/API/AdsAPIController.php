@@ -38,8 +38,8 @@ class AdsAPIController extends AppBaseController
     {
         $ads = $this->adsRepository->search(
             $request->input('adv_id'),
+            $request->input('ad_id'),
             $request->input('ad_name'),
-            $request->input('aweme')
         );
 
         return result($ads, 'Ads retrieved successfully');

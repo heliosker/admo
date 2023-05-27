@@ -25,7 +25,7 @@ class UpdateShopsAPIRequest extends APIRequest
     public function rules()
     {
         return [
-            'mark' => 'string|max:255',
+            'mark' => 'nullable|string|max:255',
             'is_allow_unbind' => 'boolean',
         ];
     }

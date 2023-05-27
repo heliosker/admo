@@ -24,7 +24,7 @@ class CreateShopsTable extends Migration
             $table->string('second_name', 255)->default('');
             $table->tinyInteger('is_valid')->default(-1);
             $table->tinyInteger('is_allow_unbind')->default(0);
-            $table->string('mark', 255)->default('');
+            $table->string('mark', 255)->nullable();
             $table->string('account_role', 255)->default('');
             $table->string('access_token', 255)->default('');
             $table->unsignedInteger('access_token_expires_at')->default(0);
