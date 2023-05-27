@@ -53,6 +53,7 @@ class Ads extends Model
 
     public $fillable = [
         'ad_id',
+        'adv_id',
         'ad_create_time',
         'ad_modify_time',
         'lab_ad_type',
