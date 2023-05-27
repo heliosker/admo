@@ -30,6 +30,7 @@ class CreateShopsTable extends Migration
             $table->unsignedInteger('access_token_expires_at')->default(0);
             $table->string('refresh_token', 255)->default('');
             $table->unsignedInteger('refresh_token_expires_at')->default(0);
+            $table->timestamp('scanned_at', 0)->nullable()->comment('扫描时间');
             $table->timestamps();
             $table->softDeletes();
 

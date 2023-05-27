@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Shops as ShopsModel;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -36,22 +37,33 @@ class Refresh extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      */
     public function handle()
     {
         $shops = ShopsModel::query()->mainAccount()->get();
+
         if ($shops->isNotEmpty()) {
             foreach ($shops as $shop) {
+                dump($shop->advertiser_id, $shop->advertiser_name);
                 $data = $this->refreshToken($shop);
+                dump($data);
+//                continue;
+                DB::enableQueryLog();
+                // 根据 Refresh Token 刷新
                 if (!empty($data)) {
                     $shop->access_token = $data['access_token'];
                     $shop->access_token_expires_at = time() + $data['expires_in'];
                     $shop->refresh_token = $data['refresh_token'];
                     $shop->refresh_token_expires_at = time() + $data['refresh_token_expires_in'];
-                    $shop->save();
+                    if ($shop->save()) {
+                        $this->info('Refresh Token Success. ID:' . $shop->advertiser_id . ' Name:' . $shop->advertiser_name);
+                    } else {
+                        $this->info('Refresh Token Error. ID:' . $shop->advertiser_id . ' Name:' . $shop->advertiser_name);
+                    }
+                    dump(DB::getQueryLog());
                 } else {
-                    Log::error('shop', [$shop->id, $shop->advertiser_name]);
+                    Log::error('shop', [$shop->advertiser_id, $shop->advertiser_name]);
+                    $this->info('Refresh Token Error. ID:' . $shop->advertiser_id . ' Name:' . $shop->advertiser_name);
                 }
             }
         }

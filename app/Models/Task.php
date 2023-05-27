@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $peak_price
  * @property numeric $min_roi
  * @property integer $is_allow_bulk
- * @property integer $is_allow_unbind
  * @property integer $punish
  * @property integer $status
  * @property string $created_at
@@ -31,12 +31,20 @@ class Task extends BaseModel
     const STATUS_IN_PROGRESS = 'inProgress';
     const STATUS_PAUSE = 'pause';
 
+    // 是否允许放量
+    const NOT_ALLOW_BULK = 0;
+
+    // 处罚规则
+    const PUNISH_PAUSE = 'pause';
+    const PUNISH_DELETE = 'delete';
+
+
     public $table = 'tasks';
 
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['adv_list'];
+    protected $appends = ['adv_list', 'scanned_at'];
 
     public $fillable = [
         'name',
@@ -44,10 +52,11 @@ class Task extends BaseModel
         'peak_price',
         'min_roi',
         'is_allow_bulk',
-        'is_allow_unbind',
+        //'is_allow_unbind',
         'punish',
         'status',
         'marketing_goal',
+        'scanned_at',
         'created_at',
         'updated_at'
     ];
@@ -61,7 +70,7 @@ class Task extends BaseModel
         'name' => 'string',
         'peak_price' => 'integer',
         'is_allow_bulk' => 'boolean',
-        'is_allow_unbind' => 'boolean',
+        //'is_allow_unbind' => 'boolean',
         'punish' => 'string',
         'status' => 'string'
     ];
@@ -108,6 +117,34 @@ class Task extends BaseModel
     {
         $advId = json_decode($this->attributes['adv_id'], true);
         return Shops::whereIn('advertiser_id', $advId)->select('id', 'advertiser_id', 'advertiser_name')->get();
+    }
+
+    public function getScannedAtAttribute($value): array
+    {
+        $now = Carbon::now();
+        $updated_time = new Carbon($value);
+        $diff = $updated_time->diffInSeconds($now);
+        if ($diff < 60) {
+            return [
+                'label' => '<60s',
+                'key' => 1,
+            ];
+        } elseif ($diff < 300) {
+            return [
+                'label' => '<5m',
+                'key' => 1,
+            ];
+        } elseif ($diff < 900) {
+            return [
+                'label' => '<15m',
+                'key' => 1
+            ];
+        } else {
+            return [
+                'label' => '>10m',
+                'key' => 2
+            ];
+        }
     }
 
 

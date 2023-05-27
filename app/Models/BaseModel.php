@@ -9,7 +9,7 @@ class BaseModel extends Model
 {
     use HasFactory;
 
-    protected $dateFormat = 'Y-m-d';
+    protected $dateFormat = 'Y-m-d H:i:s';
 
 
     /**
@@ -20,11 +20,11 @@ class BaseModel extends Model
      */
     public function getCreatedAtAttribute($value)
     {
-        return date($this->dateFormat . ' H:i:s', strtotime($value));
+        return date($this->dateFormat, strtotime($value));
     }
 
     public function getUpdatedAtAttribute($value)
     {
-        return date($this->dateFormat . ' H:i:s', strtotime($value));
+        return date($this->dateFormat, strtotime($value));
     }
 }

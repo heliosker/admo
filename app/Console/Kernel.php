@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('sync:ads')->everyThreeMinutes();
         $schedule->command('task:process')->everyFiveMinutes();
         $schedule->command('inspect:unbind')->everyTenMinutes();
         $schedule->command('shops:refresh:token')->everySixHours();

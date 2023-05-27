@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @version May 24, 2023, 10:29 am UTC
  *
  * @property string $ad_id
+ * @property string $adv_id 广告主ID
  * @property string $ad_create_time
  * @property string $ad_modify_time
  * @property string $lab_ad_type
@@ -39,6 +40,13 @@ class Ads extends Model
 
     public $table = 'ads';
 
+    // 计划状态
+    const STATUS_DELIVERY_OK = 'DELIVERY_OK';   // 投放中
+    const STATUS_AUDIT = 'AUDIT';       // 新建审核中
+    const STATUS_REAUDIT = 'REAUDIT';       // 修改审核中
+    const STATUS_TIME_DONE = 'TIME_DONE';   // 已完成
+    const STATUS_DELETE = 'DELETE';   // 已删除
+    const STATUS_DISABLE = 'DISABLE';   // 已暂停
 
     protected $dates = ['deleted_at'];
 

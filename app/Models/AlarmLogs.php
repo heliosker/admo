@@ -11,16 +11,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @package App\Models
  * @version May 25, 2023, 9:24 am UTC
  *
- * @property integer $task_id
- * @property integer $adver_id
- * @property string $adver_name
- * @property integer $is_valid
- * @property integer $shop_id
+ * @property integer $ad_id
  * @property string $ad_name
+ * @property integer $adv_id
+ * @property integer $task_id
+ * @property string $task_name
+ * @property integer $is_valid
  * @property string $punish_rule
  * @property boolean $exec_result
  * @property string $created_at
  * @property string $type
+ * @property string $cause
  * @property string $updated_at
  */
 class AlarmLogs extends BaseModel
@@ -31,16 +32,20 @@ class AlarmLogs extends BaseModel
 
     public $table = 'alarm_logs';
 
+    const TYPE_TASK = 1;
+    const TYPE_UNBIND = 2;
+
     public $fillable = [
         'task_id',
-        'adver_id',
-        'adver_name',
+        'task_name',
+        'adv_id',
         'is_valid',
-        'shop_id',
         'ad_name',
+        'ad_id',
         'punish_rule',
         'exec_result',
         'type',
+        'cause',
         'created_at',
         'updated_at'
     ];
@@ -55,10 +60,8 @@ class AlarmLogs extends BaseModel
      */
     protected $casts = [
         'task_id' => 'integer',
-        'adver_id' => 'integer',
-        'adver_name' => 'string',
+        'adv_id' => 'integer',
         'is_valid' => 'integer',
-        'shop_id' => 'integer',
         'ad_name' => 'string',
         'punish_rule' => 'string',
         'type' => 'integer',
@@ -72,7 +75,6 @@ class AlarmLogs extends BaseModel
      * @var array
      */
     public static $rules = [
-        'shop_id' => 'ad_id integer',
         'ad_name' => 'cause string text',
         'created_at' => 'updated_at date date'
     ];

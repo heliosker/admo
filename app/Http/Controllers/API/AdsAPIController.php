@@ -66,7 +66,6 @@ class AdsAPIController extends AppBaseController
         if ($rsp->json('code') != 0) {
             return error('获取计划失败！' . $rsp->json('message'));
         }
-
         $data = $rsp->json('data');
 
         $totalNum = $data['page_info']['total_number'];
@@ -77,6 +76,7 @@ class AdsAPIController extends AppBaseController
         if (count($data['list']) > 0) {
             foreach ($data['list'] as $item) {
                 $input = $this->adsRepository->getInputFields($item);
+                $input['adv_id'] = $store->advertiser_id;
                 $exists = Ads::where('ad_id', $input['ad_id'])->first();
                 if ($exists) {
                     $exists->update($input);
@@ -86,7 +86,6 @@ class AdsAPIController extends AppBaseController
                     $createdNum += 1;
                 }
             }
-
         }
 
         $result = [

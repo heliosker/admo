@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,12 +42,12 @@ class Shops extends BaseModel
     const MAIN_ACCOUNT = 0;
     // const SUB_ACCOUNT = 'sub';
 
-    const ALLOW_BIND = 1;
-    const ALLOW_UNBIND = 0;
+    const ALLOW_UNBIND = 1;
+    const NOT_ALLOW_UNBIND = 0;
 
-    const UNKNOWN = -1;
-    const INVALID = 0;
-    const VALID = 1;
+    const UNKNOWN = -1; // 未知，默认值
+    const INVALID = 0;  // 无效，已解绑
+    const VALID = 1;    // 有效
 
     const ROLE_QIANCHUAN_AGENT = 'PLATFORM_ROLE_QIANCHUAN_AGENT';
     const ROLE_SHOP_ACCOUNT = 'PLATFORM_ROLE_SHOP_ACCOUNT';
@@ -67,11 +68,12 @@ class Shops extends BaseModel
         'refresh_token',
         'access_token_expires_at',
         'refresh_token_expires_at',
+        'scanned_at',
         'created_at',
         'updated_at'
     ];
 
-    protected $appends = ['role', 'valid', 'child_num'];
+    protected $appends = ['role', 'valid', 'child_num', 'scanned_at'];
 
 
     /**
@@ -151,6 +153,34 @@ class Shops extends BaseModel
                 $label = '未知';
         }
         return ['is_valid' => $valid, 'label' => $label];
+    }
+
+    public function getScannedAtAttribute($value): array
+    {
+        $now = Carbon::now();
+        $updated_time = new Carbon($value);
+        $diff = $updated_time->diffInSeconds($now);
+        if ($diff < 60) {
+            return [
+                'label' => '<60s',
+                'key' => 1,
+            ];
+        } elseif ($diff < 300) {
+            return [
+                'label' => '<5m',
+                'key' => 1,
+            ];
+        } elseif ($diff < 900) {
+            return [
+                'label' => '<15m',
+                'key' => 1
+            ];
+        } else {
+            return [
+                'label' => '>10m',
+                'key' => 2
+            ];
+        }
     }
 
     /**
