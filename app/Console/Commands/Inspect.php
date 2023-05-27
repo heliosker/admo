@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\AlarmLogs;
 use App\Models\Shops as ShopsModel;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -53,6 +54,7 @@ class Inspect extends Command
                         foreach ($subs as $sub) {
                             if (in_array($sub->advertiser_id, $advIdsSync)) {
                                 // 更新同步时间
+                                $sub->scanned_at = Carbon::now();
                                 $sub->save();
                                 $this->info('更新同步时间, ID:' . $sub->advertiser_id . ' Name:' . $sub->advertiser_name);
                                 Log::error('更新同步时间, ID:' . $sub->advertiser_id . ' Name:' . $sub->advertiser_name);

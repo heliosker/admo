@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Ramsey\Uuid\DeprecatedUuidMethodsTrait;
 
 /**
  * Class shops
@@ -73,7 +74,7 @@ class Shops extends BaseModel
         'updated_at'
     ];
 
-    protected $appends = ['role', 'valid', 'child_num', 'scanned_at'];
+    protected $appends = ['role', 'valid', 'child_num', 'scanned'];
 
 
     /**
@@ -155,32 +156,30 @@ class Shops extends BaseModel
         return ['is_valid' => $valid, 'label' => $label];
     }
 
-    public function getScannedAtAttribute($value): array
+    public function getScannedAttribute($value): ?array
     {
-        $now = Carbon::now();
-        $updated_time = new Carbon($value);
-        $diff = $updated_time->diffInSeconds($now);
-        if ($diff < 60) {
-            return [
-                'label' => '<60s',
-                'key' => 1,
-            ];
-        } elseif ($diff < 300) {
-            return [
-                'label' => '<5m',
-                'key' => 1,
-            ];
-        } elseif ($diff < 900) {
-            return [
-                'label' => '<15m',
-                'key' => 1
-            ];
-        } else {
-            return [
-                'label' => '>10m',
-                'key' => 2
-            ];
+        if (isset($this->attributes['scanned_at'])) {
+            $now = Carbon::now();
+            $scannedTime = new Carbon($this->attributes['scanned_at']);
+            $diff = $scannedTime->diffInSeconds($now);
+            if ($diff < 60) {
+                return [
+                    'label' => '<60s',
+                    'key' => 1,
+                ];
+            } elseif ($diff > 100 && $diff <= 900) {
+                return [
+                    'label' => '<' . (int)($diff / 60) . 'm',
+                    'key' => 1,
+                ];
+            } else {
+                return [
+                    'label' => '>15m',
+                    'key' => 2
+                ];
+            }
         }
+        return null;
     }
 
     /**
