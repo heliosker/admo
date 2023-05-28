@@ -121,6 +121,12 @@ class Task extends Command
 
     public function punishment(Ads $ad, string $rule): bool
     {
+
+        if (config('app.debug') == true) {
+            $this->line('Debug 模式，不真执行处罚.');
+            Log::info('Debug 模式，不真执行处罚.');
+            return false;
+        }
         $opt = ($rule == TaskModel::PUNISH_PAUSE) ? 'DISABLE' : 'DELETE';
         $store = Shops::where(['advertiser_id' => $ad->adv_id])->first();
         $rsp = Http::withHeaders([
