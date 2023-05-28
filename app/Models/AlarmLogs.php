@@ -52,6 +52,7 @@ class AlarmLogs extends BaseModel
 
 
     protected $dates = ['deleted_at'];
+    protected $appends = ['shop'];
 
     /**
      * The attributes that should be casted to native types.
@@ -78,6 +79,11 @@ class AlarmLogs extends BaseModel
         'ad_name' => 'cause string text',
         'created_at' => 'updated_at date date'
     ];
+
+    public function getShopAttribute()
+    {
+        return Shops::select('advertiser_id', 'advertiser_name', 'scanned_at')->where('advertiser_id', $this->attributes['adv_id'])->first() ?? null;
+    }
 
 
 }

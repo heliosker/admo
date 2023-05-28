@@ -19,8 +19,7 @@ class AlarmLogsRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'task_id',
-        'adver_id',
-        'adver_name',
+        'adv_id',
         'is_valid',
         'shop_id',
         'ad_name',
@@ -43,7 +42,6 @@ class AlarmLogsRepository extends BaseRepository
 
     public function search($type, $taskName, $advId, $rule, $startAt, $endAt, $paginate = true, $perPage = 15)
     {
-        DB::enableQueryLog();
 
         $query = $this->model->query();
 
@@ -70,7 +68,6 @@ class AlarmLogsRepository extends BaseRepository
         if ($paginate) {
             return $query->paginate($perPage);
         }
-//        dd(DB::getQueryLog());
 
         return $query->get();
     }
