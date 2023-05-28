@@ -280,15 +280,21 @@ class ShopsAPIController extends AppBaseController
         $advertisers = $rsp->json('data');
 
         $result = [
-            'exists' => 0,
-            'append' => 0
+            'updated_num' => 0,
+            'created_num' => 0
         ];
         foreach ($advertisers as $advertiser) {
             $account = Shops::where('advertiser_id', $advertiser['id'])
                 ->where('parent_id', $store->id)
                 ->first();
             if ($account) {
-                $result['exists']++;
+                $account->advertiser_name = $advertiser['name'];
+                $account->company = $advertiser['company'];
+                $account->first_name = $advertiser['first_industry_name'];
+                $account->second_name = $advertiser['second_industry_name'];
+                $account->parent_id = $store->id;
+                $account->save();
+                $result['updated_num']++;
             } else {
                 Shops::create([
                     'advertiser_id' => $advertiser['id'],
@@ -298,7 +304,7 @@ class ShopsAPIController extends AppBaseController
                     'second_name' => $advertiser['second_industry_name'],
                     'parent_id' => $store->id
                 ]);
-                $result['append']++;
+                $result['created_num']++;
             }
         }
 
