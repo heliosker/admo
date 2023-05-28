@@ -42,46 +42,51 @@ class Inspect extends Command
      */
     public function handle()
     {
-        $shops = ShopsModel::query()->mainAccount()->get();
+        // 不允许解绑母账号
+        $shops = ShopsModel::where('is_allow_unbind', ShopsModel::NOT_ALLOW_UNBIND)->mainAccount()->get();
+        $mainCnt = 0;
+        $subCnt = 0;
         if ($shops->isNotEmpty()) {
             foreach ($shops as $shop) {
-                // 不允许解绑时检测
-                if ($shop->is_allow_unbind == ShopsModel::NOT_ALLOW_UNBIND) {
-                    $advIdsSync = $this->adv($shop);
+                $mainCnt++;
+                $advIdsSync = $this->adv($shop);
 
-                    $subs = ShopsModel::where('parent_id', $shop->id)->get();
-                    if ($subs->isNotEmpty()) {
-                        foreach ($subs as $sub) {
-                            if (in_array($sub->advertiser_id, $advIdsSync)) {
-                                // 更新同步时间
-                                $sub->scanned_at = Carbon::now();
-                                $sub->save();
-                                $this->info('更新同步时间, ID:' . $sub->advertiser_id . ' Name:' . $sub->advertiser_name);
-                                Log::error('更新同步时间, ID:' . $sub->advertiser_id . ' Name:' . $sub->advertiser_name);
-                            } else {
-                                // 已解绑
-                                $sub->is_valid = ShopsModel::INVALID;
-                                $sub->save();
-                                $this->info('解绑账号, ID:' . $sub->advertiser_id . ' Name:' . $sub->advertiser_name);
-                                Log::error('解绑账号, ID:' . $sub->advertiser_id . ' Name:' . $sub->advertiser_name);
+                $subs = ShopsModel::where('parent_id', $shop->id)->get();
+                if ($subs->isNotEmpty()) {
+                    foreach ($subs as $sub) {
+                        $subCnt++;
+                        if (in_array($sub->advertiser_id, $advIdsSync)) {
+                            // 更新同步时间
+                            $sub->scanned_at = Carbon::now();
+                            $sub->save();
+                            $this->info('更新巡查时间, ID:' . $sub->advertiser_id . ' Name:' . $sub->advertiser_name);
+                            Log::error('更新巡查时间, ID:' . $sub->advertiser_id . ' Name:' . $sub->advertiser_name);
+                        } else {
+                            // 已解绑
+                            $sub->is_valid = ShopsModel::INVALID;
+                            $sub->save();
+                            $this->info('解绑账号, ID:' . $sub->advertiser_id . ' Name:' . $sub->advertiser_name);
+                            Log::error('解绑账号, ID:' . $sub->advertiser_id . ' Name:' . $sub->advertiser_name);
 
-                                // 创建解绑日记
-                                $log = (new AlarmLogs());
-                                $log->adver_id = $sub->advertiser_id;
-                                $log->ad_name = $sub->advertiser_name;
-                                $log->is_valid = ShopsModel::INVALID;
-                                $log->type = AlarmLogs::TYPE_UNBIND;
-                                $log->save();
-                            }
+                            // 创建解绑日记
+                            $log = (new AlarmLogs());
+                            $log->adv_id = $sub->advertiser_id;
+                            $log->ad_name = $sub->advertiser_name;
+                            $log->is_valid = ShopsModel::INVALID;
+                            $log->type = AlarmLogs::TYPE_UNBIND;
+                            $log->save();
                         }
                     }
                 }
-                
+
                 // 更新主巡查时间
                 $shop->scanned_at = Carbon::now();
                 $shop->save();
             }
         }
+
+        $this->info('巡查不允许解绑母账号数[' . $mainCnt . '], 子账号数[' . $subCnt . ']');
+        Log::info('巡查不允许解绑母账号数[' . $mainCnt . '], 子账号数[' . $subCnt . ']');
     }
 
     public function adv(ShopsModel $shop)
