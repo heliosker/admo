@@ -108,4 +108,11 @@ class AdsRepository extends BaseRepository
 
         return $query->get();
     }
+
+    public function adDetail()
+    {
+        //https://ad.oceanengine.com/open_api/v1.0/qianchuan/ad/detail/get/
+
+
+    }
 }

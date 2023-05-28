@@ -41,6 +41,7 @@ class CreateAdsTable extends Migration
             $table->softDeletes();
 
             $table->index('ad_id');
+            $table->index('adv_id');
             $table->index('name');
             $table->index('status');
         });
