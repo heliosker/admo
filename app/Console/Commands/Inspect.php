@@ -75,8 +75,11 @@ class Inspect extends Command
                             }
                         }
                     }
-
                 }
+                
+                // 更新主巡查时间
+                $shop->scanned_at = Carbon::now();
+                $shop->save();
             }
         }
     }

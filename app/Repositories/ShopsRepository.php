@@ -39,6 +39,7 @@ class ShopsRepository extends BaseRepository
     public function search($advertiserId, $name, $isValid, $parentId = 0, $paginate = true, $perPage = 15)
     {
         $query = $this->model->query();
+
         if ($advertiserId !== null) {
             $query->where('advertiser_id', $advertiserId);
         }

@@ -40,6 +40,7 @@ class AdsAPIController extends AppBaseController
             $request->input('adv_id'),
             $request->input('ad_id'),
             $request->input('ad_name'),
+            $request->input('status'),
         );
 
         return result($ads, 'Ads retrieved successfully');

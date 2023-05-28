@@ -40,41 +40,41 @@ class Refresh extends Command
      */
     public function handle()
     {
-        $shops = ShopsModel::query()->mainAccount()->get();
+        $shopsTokenGroup = ShopsModel::select('refresh_token')->mainAccount()->distinct()->get();
 
-        if ($shops->isNotEmpty()) {
-            foreach ($shops as $shop) {
-                dump($shop->advertiser_id, $shop->advertiser_name);
-                $data = $this->refreshToken($shop);
-                dump($data);
-//                continue;
-                DB::enableQueryLog();
+        if ($shopsTokenGroup->isNotEmpty()) {
+
+            foreach ($shopsTokenGroup as $shopsToken) {
+
+                $data = $this->refreshToken($shopsToken->refresh_token);
+
                 // 根据 Refresh Token 刷新
                 if (!empty($data)) {
-                    $shop->access_token = $data['access_token'];
-                    $shop->access_token_expires_at = time() + $data['expires_in'];
-                    $shop->refresh_token = $data['refresh_token'];
-                    $shop->refresh_token_expires_at = time() + $data['refresh_token_expires_in'];
-                    if ($shop->save()) {
-                        $this->info('Refresh Token Success. ID:' . $shop->advertiser_id . ' Name:' . $shop->advertiser_name);
+                    $upFields = [];
+                    $upFields['access_token'] = $data['access_token'];
+                    $upFields['access_token_expires_at'] = time() + $data['expires_in'];
+                    $upFields['refresh_token'] = $data['refresh_token'];
+                    $upFields['refresh_token_expires_at'] = time() + $data['refresh_token_expires_in'];
+
+                    $upCnt = ShopsModel::where('refresh_token', $shopsToken->refresh_token)->update($upFields);
+                    if ($upCnt > 0) {
+                        $this->info('Refresh Token Success. old refresh Token:' . $shopsToken->refresh_token . ' New Refresh Token:' . $upFields['refresh_token']);
                     } else {
-                        $this->info('Refresh Token Error. ID:' . $shop->advertiser_id . ' Name:' . $shop->advertiser_name);
+                        Log::error('Refresh Token Error. old refresh Token:' . $shopsToken->refresh_token);
                     }
-                    dump(DB::getQueryLog());
                 } else {
-                    Log::error('shop', [$shop->advertiser_id, $shop->advertiser_name]);
-                    $this->info('Refresh Token Error. ID:' . $shop->advertiser_id . ' Name:' . $shop->advertiser_name);
+                    $this->info('Refresh Token Error. Refresh_token:' . $shopsToken->refresh_token);
                 }
             }
         }
     }
 
-    public function refreshToken(ShopsModel $shop)
+    public function refreshToken($refreshToken)
     {
         $rsp = Http::withHeaders([
             'Content-Type' => 'application/json'
         ])->post('https://ad.oceanengine.com/open_api/oauth2/refresh_token/', [
-            'refresh_token' => $shop->refresh_token,
+            'refresh_token' => $refreshToken,
             'app_id' => config('ocean.appid'),
             'secret' => config('ocean.secret'),
             'grant_type' => 'refresh_token'

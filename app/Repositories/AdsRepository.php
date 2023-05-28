@@ -85,7 +85,7 @@ class AdsRepository extends BaseRepository
     }
 
 
-    public function search($advId, $adId, $adName, $paginate = true, $perPage = 15)
+    public function search($advId, $adId, $adName, $status, $paginate = true, $perPage = 15)
     {
         $query = $this->model->query();
 
@@ -97,6 +97,9 @@ class AdsRepository extends BaseRepository
         }
         if ($adName !== null) {
             $query->where('name', 'like', "%$adName%");
+        }
+        if ($status !== null) {
+            $query->where('status', $status);
         }
 
         if ($paginate) {

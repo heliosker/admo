@@ -27,6 +27,7 @@ use Ramsey\Uuid\DeprecatedUuidMethodsTrait;
  * @property string $mark
  * @property integer $access_token_expires_at
  * @property integer $refresh_token_expires_at
+ * @property string $scanned_at
  * @property string $created_at
  * @property string $updated_at
  */
