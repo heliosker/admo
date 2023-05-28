@@ -69,6 +69,7 @@ class Task extends BaseModel
     protected $casts = [
         'name' => 'string',
         'peak_price' => 'integer',
+        'min_roi' => 'double',
         'is_allow_bulk' => 'boolean',
         //'is_allow_unbind' => 'boolean',
         'punish' => 'string',
