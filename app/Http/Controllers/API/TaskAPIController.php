@@ -35,8 +35,13 @@ class TaskAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $tasks = $this->taskRepository->paginate(
-            $request->get('limit')
+        $tasks = $this->taskRepository->search(
+            $request->input('name'),
+            $request->input('status'),
+            $request->input('start_at'),
+            $request->input('end_at'),
+            true,
+            $request->input('limit')
         );
 
         return result($tasks, 'Tasks retrieved successfully');

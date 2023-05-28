@@ -40,8 +40,9 @@ class ShopsAPIController extends AppBaseController
         $name = $request->get('name');
         $isValid = $request->get('is_valid');
         $parentId = $request->get('parent_id');
+        $limit = $request->get('limit');
 
-        $shops = $this->shopsRepository->search($advertiserId, $name, $isValid, $parentId);
+        $shops = $this->shopsRepository->search($advertiserId, $name, $isValid, $parentId, true, $limit);
 
         return result($shops, 'Shops retrieved successfully');
     }

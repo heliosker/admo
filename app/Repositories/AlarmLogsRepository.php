@@ -44,8 +44,7 @@ class AlarmLogsRepository extends BaseRepository
     {
 
         $query = $this->model->query();
-
-
+        
         if ($type !== null) {
             $query->where('type', $type);
         }
