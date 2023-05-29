@@ -114,21 +114,21 @@ class AlarmLogsAPIController extends AppBaseController
      *
      * @param int $id
      *
-     * @return Response
+     * @return JsonResponse
      * @throws \Exception
      *
      */
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         /** @var AlarmLogs $alarmLogs */
         $alarmLogs = $this->alarmLogsRepository->find($id);
 
         if (empty($alarmLogs)) {
-            return $this->sendError('Alarm Logs not found');
+            return error('Alarm Logs not found',404);
         }
 
-        $alarmLogs->delete();
+        $alarmLogs->forceDelete();
 
-        return $this->sendSuccess('Alarm Logs deleted successfully');
+        return result([],'Alarm Logs deleted successfully');
     }
 }

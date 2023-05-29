@@ -136,22 +136,30 @@ class ShopsAPIController extends AppBaseController
      *
      * @param int $id
      *
-     * @return Response
+     * @return JsonResponse
      * @throws \Exception
      *
      */
     public function destroy($id)
     {
-        /** @var shops $shops */
-        $shops = $this->shopsRepository->find($id);
+        /** @var shops $shop */
+        $shop = $this->shopsRepository->find($id);
 
-        if (empty($shops)) {
-            return $this->sendError('Shops not found');
+        if (empty($shop)) {
+            return error('Account not found',404);
         }
 
-        $shops->delete();
+       if ($task = Task::where('adv_id', 'like', '%'.$shop->advertiser_id.'%')->first()){
+           return error('删除失败！该账户存在任务中，请先删除任务：['.$task->name.']。');
+       }
 
-        return $this->sendSuccess('Shops deleted successfully');
+        if (($shop->parent_id == Shops::MAIN_ACCOUNT) && $shop->child_num > 0){
+            return error('母账号下存在子账号，暂时不支持直接删除母账号！');
+        }
+
+        $shop->forceDelete();
+
+        return result([],'Shops deleted successfully');
     }
 
     /**

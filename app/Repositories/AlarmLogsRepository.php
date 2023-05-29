@@ -43,7 +43,7 @@ class AlarmLogsRepository extends BaseRepository
     public function search($type, $taskName, $advId, $rule, $startAt, $endAt, $paginate = true, $perPage = 15)
     {
 
-        $query = $this->model->query();
+        $query = $this->model->query()->with('advertiser');
 
 
         if ($type !== null) {

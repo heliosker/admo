@@ -45,6 +45,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // 店铺设置
     Route::put('shops/{id}', [ShopsAPIController::class, 'update']);
+    Route::delete('shops/{id}', [ShopsAPIController::class, 'destroy']);
 
     Route::get('shops/trees', [ShopsAPIController::class, 'trees']);
 
@@ -57,6 +58,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('ads', [AdsAPIController::class, 'index']);
 
     Route::get('alarm_logs', [AlarmLogsAPIController::class, 'index']);
+    Route::delete('alarm_logs/{id}', [AlarmLogsAPIController::class, 'destroy']);
 
 });
 
