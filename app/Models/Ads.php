@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $deep_bid_type
  * @property number $roi_goal
  * @property number $cpa_bid
+ * @property number $auto_extend_enabled
  * @property string $start_time
  * @property string $end_time
  */
@@ -71,6 +72,7 @@ class Ads extends Model
         'deep_bid_type',
         'roi_goal',
         'cpa_bid',
+        'auto_extend_enabled',
         'start_time',
         'end_time'
     ];
@@ -100,6 +102,7 @@ class Ads extends Model
         'cpa_bid' => 'double',
         'start_time' => 'string',
         'end_time' => 'string',
+        'auto_extend_enabled' => 'integer',
         'created_at' => 'string',
         'updated_at' => 'string',
     ];
@@ -123,6 +126,16 @@ class Ads extends Model
         }
 
         return null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function advertiser()
+    {
+        return $this->belongsTo(Shops::class, 'adv_id', 'advertiser_id')->select(['advertiser_id', 'advertiser_name', 'parent_id'])
+            ??
+            null;
     }
 
 

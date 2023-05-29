@@ -40,7 +40,9 @@ class AlarmLogsAPIController extends AppBaseController
             $request->input('adver_id'),
             $request->input('punish_rule'),
             $request->input('start_at'),
-            $request->input('end_at')
+            $request->input('end_at'),
+            true,
+            $request->input('limit'),
         );
 
         return result($alarmLogs, 'Alarm Logs retrieved successfully');

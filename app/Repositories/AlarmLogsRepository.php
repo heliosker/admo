@@ -45,7 +45,6 @@ class AlarmLogsRepository extends BaseRepository
 
         $query = $this->model->query()->with('advertiser');
 
-
         if ($type !== null) {
             $query->where('type', $type);
         }
