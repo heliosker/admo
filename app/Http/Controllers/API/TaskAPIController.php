@@ -124,11 +124,11 @@ class TaskAPIController extends AppBaseController
         $task = $this->taskRepository->find($id);
 
         if (empty($task)) {
-            return $this->sendError('Task not found');
+            return error('Task not found', 404);
         }
 
-        $task->delete();
+        $task->forceDelete();
 
-        return result('Task deleted successfully');
+        return result([], 'Task deleted successfully');
     }
 }
