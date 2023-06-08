@@ -205,4 +205,9 @@ class Shops extends BaseModel
         return $query->where('parent_id', '!=', self::MAIN_ACCOUNT);
     }
 
+    public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Tags::class);
+    }
+
 }

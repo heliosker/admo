@@ -9,8 +9,7 @@ use App\Repositories\BaseRepository;
  * Class TagsRepository
  * @package App\Repositories
  * @version May 25, 2023, 9:38 am UTC
-*/
-
+ */
 class TagsRepository extends BaseRepository
 {
     /**
@@ -38,5 +37,20 @@ class TagsRepository extends BaseRepository
     public function model()
     {
         return Tags::class;
+    }
+
+    public function search($name, $paginate, $perPage)
+    {
+        $query = $this->model->query();
+        
+        if ($name !== null) {
+            $query->where('name', 'like', "%$name%");
+        }
+
+        if ($paginate) {
+            return $query->paginate($perPage);
+        }
+
+        return $query->get();
     }
 }

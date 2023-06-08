@@ -39,6 +39,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('admins', [AdminUserAPIController::class, 'index']);
 
     Route::resource('tasks', TaskAPIController::class);
+    Route::resource('tags', TagsAPIController::class);
 
     // 列表
     Route::get('shops', [ShopsAPIController::class, 'index']);
@@ -64,5 +65,3 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 // 计划报表
 Route::get('sub_ad_report', [SubscribeController::class, 'adReport']);
-
-Route::resource('tags', App\Http\Controllers\API\TagsAPIController::class);

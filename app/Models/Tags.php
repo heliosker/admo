@@ -22,10 +22,9 @@ class Tags extends Model
     use HasFactory;
 
     public $table = 'tags';
-    
+
 
     protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -49,8 +48,8 @@ class Tags extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|max:255'
+        'name' => 'required|array'
     ];
 
-    
+
 }

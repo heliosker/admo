@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\API\CreateTagsAPIRequest;
-use App\Http\Requests\API\UpdateTagsAPIRequest;
-use App\Models\Tags;
-use App\Repositories\TagsRepository;
-use Illuminate\Http\Request;
-use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\DB;
 use Response;
+use App\Models\Tags;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Repositories\TagsRepository;
+use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\API\UpdateTagsAPIRequest;
+use App\Http\Requests\API\CreateTagsAPIRequest;
 
 /**
  * Class TagsController
  * @package App\Http\Controllers\API
  */
-
 class TagsAPIController extends AppBaseController
 {
     /** @var  TagsRepository */
@@ -30,17 +31,17 @@ class TagsAPIController extends AppBaseController
      * GET|HEAD /tags
      *
      * @param Request $request
-     * @return Response
+     * @return JsonResponse
      */
     public function index(Request $request)
     {
-        $tags = $this->tagsRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
+        $tags = $this->tagsRepository->search(
+            $request->input('name'),
+            $request->input('page', 1),
+            $request->input('limit', 15)
         );
 
-        return $this->sendResponse($tags->toArray(), 'Tags retrieved successfully');
+        return result($tags, 'Tags retrieved successfully');
     }
 
     /**
@@ -49,15 +50,25 @@ class TagsAPIController extends AppBaseController
      *
      * @param CreateTagsAPIRequest $request
      *
-     * @return Response
+     * @return JsonResponse
      */
     public function store(CreateTagsAPIRequest $request)
     {
         $input = $request->all();
-
-        $tags = $this->tagsRepository->create($input);
-
-        return $this->sendResponse($tags->toArray(), 'Tags saved successfully');
+        $exits = Tags::whereIn('name', $input['name'])->get()->pluck('name')->toArray();
+        if (!empty($exits)) {
+            return error('不能重复添加，已存在标签名：' . implode(', ', $exits));
+        }
+        $createdNum = 0;
+        $failNum = 0;
+        foreach ($input['name'] as $value) {
+            if ($this->tagsRepository->create(['name' => $value])) {
+                $createdNum += 1;
+            } else {
+                $failNum += 1;
+            }
+        }
+        return result(['created_num' => $createdNum, 'fail_num' => $failNum], 'Tags saved successfully');
     }
 
     /**
@@ -66,7 +77,7 @@ class TagsAPIController extends AppBaseController
      *
      * @param int $id
      *
-     * @return Response
+     * @return JsonResponse
      */
     public function show($id)
     {
@@ -74,10 +85,10 @@ class TagsAPIController extends AppBaseController
         $tags = $this->tagsRepository->find($id);
 
         if (empty($tags)) {
-            return $this->sendError('Tags not found');
+            return error('Tags not found', 404);
         }
 
-        return $this->sendResponse($tags->toArray(), 'Tags retrieved successfully');
+        return result($tags, 'Tags retrieved successfully');
     }
 
     /**
@@ -87,9 +98,9 @@ class TagsAPIController extends AppBaseController
      * @param int $id
      * @param UpdateTagsAPIRequest $request
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function update($id, UpdateTagsAPIRequest $request)
+    public function update($id, UpdateTagsAPIRequest $request): JsonResponse
     {
         $input = $request->all();
 
@@ -97,12 +108,12 @@ class TagsAPIController extends AppBaseController
         $tags = $this->tagsRepository->find($id);
 
         if (empty($tags)) {
-            return $this->sendError('Tags not found');
+            return error('Tags not found', 404);
         }
 
         $tags = $this->tagsRepository->update($input, $id);
 
-        return $this->sendResponse($tags->toArray(), 'Tags updated successfully');
+        return result($tags, 'Tags updated successfully');
     }
 
     /**
@@ -111,21 +122,21 @@ class TagsAPIController extends AppBaseController
      *
      * @param int $id
      *
+     * @return JsonResponse
      * @throws \Exception
      *
-     * @return Response
      */
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         /** @var Tags $tags */
         $tags = $this->tagsRepository->find($id);
 
         if (empty($tags)) {
-            return $this->sendError('Tags not found');
+            return error('Tags not found', 404);
         }
 
-        $tags->delete();
+        $tags->forceDelete();
 
-        return $this->sendSuccess('Tags deleted successfully');
+        return result([], 'Tags deleted successfully');
     }
 }
