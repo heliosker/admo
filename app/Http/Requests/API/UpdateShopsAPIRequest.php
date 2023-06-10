@@ -27,6 +27,7 @@ class UpdateShopsAPIRequest extends APIRequest
         return [
             'mark' => 'nullable|string|max:255',
             'is_allow_unbind' => 'boolean',
+            'tags_id' => 'array'
         ];
     }
 }

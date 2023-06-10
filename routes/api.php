@@ -43,6 +43,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // 列表
     Route::get('shops', [ShopsAPIController::class, 'index']);
+    Route::put('shops', [ShopsAPIController::class, 'update']);
 
     // 店铺设置
     Route::put('shops/{id}', [ShopsAPIController::class, 'update']);

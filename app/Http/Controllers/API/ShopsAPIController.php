@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Task;
+use Illuminate\Support\Facades\DB;
 use Response;
 use App\Models\shops;
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ class ShopsAPIController extends AppBaseController
         $name = $request->input('name');
         $tagIds = $request->input('tag_ids');
         $isValid = $request->input('is_valid');
-        $parentId = $request->input('parent_id',null);
+        $parentId = $request->input('parent_id', null);
         $limit = $request->input('limit');
         $shops = $this->shopsRepository->search($advertiserId, $name, $tagIds, $isValid, $parentId, true, $limit);
 
@@ -127,6 +128,9 @@ class ShopsAPIController extends AppBaseController
         }
 
         $shops = $this->shopsRepository->update($input, $id);
+        if (!empty($input['tags_id'])) {
+            $shops->tags()->sync($input['tags_id']);
+        }
 
         return result($shops, 'shops updated successfully');
     }

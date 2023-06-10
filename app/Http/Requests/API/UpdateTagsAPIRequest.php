@@ -24,8 +24,10 @@ class UpdateTagsAPIRequest extends APIRequest
      */
     public function rules()
     {
-        $rules = Tags::$rules;
-        
+        $rules = [
+            'name' => 'required|string|max:20'
+        ];
+
         return $rules;
     }
 }
