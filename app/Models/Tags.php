@@ -52,4 +52,8 @@ class Tags extends Model
     ];
 
 
+    public function shops()
+    {
+        return $this->belongsToMany(Shops::class);
+    }
 }

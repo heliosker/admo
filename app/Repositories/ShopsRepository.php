@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Shops;
 use App\Models\Task;
 use App\Repositories\BaseRepository;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class shopsRepository
@@ -36,9 +37,9 @@ class ShopsRepository extends BaseRepository
         return $this->fieldSearchable;
     }
 
-    public function search($advertiserId, $name, $isValid, $parentId = 0, $paginate = true, $perPage = 15)
+    public function search($advertiserId, $name, $tagIds, $isValid, $parentId = 0, $paginate = true, $perPage = 15)
     {
-        $query = $this->model->query();
+        $query = $this->model->query()->with('tags:name');
 
         if ($advertiserId !== null) {
             $query->where('advertiser_id', $advertiserId);
@@ -46,6 +47,12 @@ class ShopsRepository extends BaseRepository
 
         if ($name !== null) {
             $query->where('advertiser_name', 'like', "%$name%");
+        }
+
+        if ($tagIds !== null) {
+            $query->whereHas('tags', function ($query) use ($tagIds) {
+                $query->whereIn('tags_id', $tagIds);
+            });
         }
 
         if ($parentId !== null) {
@@ -59,21 +66,20 @@ class ShopsRepository extends BaseRepository
         if ($paginate) {
             return $query->paginate($perPage);
         }
-
         return $query->get();
     }
 
-    public function children($parentId=0)
+    public function children($parentId = 0)
     {
         // 监控中的任务ID
         $advIds = Task::select('adv_id')->get()->pluck('adv_id')->flatten()->all();;
 
         $result = [];
-        $field = ['id','parent_id','advertiser_id','advertiser_name'];
+        $field = ['id', 'parent_id', 'advertiser_id', 'advertiser_name'];
         $shops = Shops::where('parent_id', $parentId)->select($field)->get();
-        if ($shops->isNotEmpty()){
-            foreach ($shops->toArray() as $key=>$shop){
-               $result[$key] = $this->renameField($shop,$advIds);
+        if ($shops->isNotEmpty()) {
+            foreach ($shops->toArray() as $key => $shop) {
+                $result[$key] = $this->renameField($shop, $advIds);
             }
         }
         return $result;
@@ -86,18 +92,16 @@ class ShopsRepository extends BaseRepository
      * @param $existIds
      * @return array
      */
-    public function renameField($arr,$existIds): array
+    public function renameField($arr, $existIds): array
     {
         $data = [];
-        $data['id']=$arr['id'];
-        $data['title']=$arr['advertiser_name'];
-        $data['value']=$arr['advertiser_id'];
-        $data['key']=$arr['advertiser_id'];
-        $data['disabled']=in_array($arr['advertiser_id'],$existIds);
+        $data['id'] = $arr['id'];
+        $data['title'] = $arr['advertiser_name'];
+        $data['value'] = $arr['advertiser_id'];
+        $data['key'] = $arr['advertiser_id'];
+        $data['disabled'] = in_array($arr['advertiser_id'], $existIds);
         return $data;
     }
-
-
 
 
     /**

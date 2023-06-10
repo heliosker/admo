@@ -36,13 +36,13 @@ class ShopsAPIController extends AppBaseController
      */
     public function index(Request $request): JsonResponse
     {
-        $advertiserId = $request->get('advertiser_id');
-        $name = $request->get('name');
-        $isValid = $request->get('is_valid');
-        $parentId = $request->get('parent_id');
-        $limit = $request->get('limit');
-
-        $shops = $this->shopsRepository->search($advertiserId, $name, $isValid, $parentId, true, $limit);
+        $advertiserId = $request->input('advertiser_id');
+        $name = $request->input('name');
+        $tagIds = $request->input('tag_ids');
+        $isValid = $request->input('is_valid');
+        $parentId = $request->input('parent_id',null);
+        $limit = $request->input('limit');
+        $shops = $this->shopsRepository->search($advertiserId, $name, $tagIds, $isValid, $parentId, true, $limit);
 
         return result($shops, 'Shops retrieved successfully');
     }
@@ -147,20 +147,20 @@ class ShopsAPIController extends AppBaseController
         $shop = $this->shopsRepository->find($id);
 
         if (empty($shop)) {
-            return error('Account not found',404);
+            return error('Account not found', 404);
         }
 
-       if ($task = Task::where('adv_id', 'like', '%'.$shop->advertiser_id.'%')->first()){
-           return error('删除失败！该账户存在任务中，请先删除任务：['.$task->name.']。');
-       }
+        if ($task = Task::where('adv_id', 'like', '%' . $shop->advertiser_id . '%')->first()) {
+            return error('删除失败！该账户存在任务中，请先删除任务：[' . $task->name . ']。');
+        }
 
-        if (($shop->parent_id == Shops::MAIN_ACCOUNT) && $shop->child_num > 0){
+        if (($shop->parent_id == Shops::MAIN_ACCOUNT) && $shop->child_num > 0) {
             return error('母账号下存在子账号，暂时不支持直接删除母账号！');
         }
 
         $shop->forceDelete();
 
-        return result([],'Shops deleted successfully');
+        return result([], 'Shops deleted successfully');
     }
 
     /**
