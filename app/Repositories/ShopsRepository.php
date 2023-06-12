@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Shops;
+use App\Models\Tags;
 use App\Models\Task;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Facades\DB;
@@ -67,6 +68,28 @@ class ShopsRepository extends BaseRepository
             return $query->paginate($perPage);
         }
         return $query->get();
+    }
+
+    public function shopAndTags($id): array
+    {
+        $shopTags = $this->model->query()->with('tags:name')->find($id);
+        $useTags = [];
+        if ($shopTags && $shopTags->tags) {
+            foreach ($shopTags->tags as $tag) {
+                $useTags[] = $tag['pivot']['tags_id'] ?? 0;
+            }
+        }
+        $tags = Tags::all();
+        $result = [];
+        if ($tags->isNotEmpty()) {
+            foreach ($tags as $key => $tag) {
+                $result[$key]['title'] = $tag['name'];
+                $result[$key]['value'] = $tag['id'];
+                $result[$key]['key'] = $tag['id'];
+                $result[$key]['checked'] = in_array($tag['id'], $useTags);
+            }
+        }
+        return $result;
     }
 
     public function children($parentId = 0)

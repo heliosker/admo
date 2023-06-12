@@ -98,13 +98,13 @@ class ShopsAPIController extends AppBaseController
     public function show($id)
     {
         /** @var shops $shops */
-        $shops = $this->shopsRepository->find($id);
+        $shops = $this->shopsRepository->shopAndTags($id);
 
         if (empty($shops)) {
-            return $this->sendError('Shops not found');
+            return error('Shops not found');
         }
 
-        return $this->sendResponse($shops->toArray(), 'Shops retrieved successfully');
+        return result($shops, 'Shops retrieved successfully');
     }
 
     /**
