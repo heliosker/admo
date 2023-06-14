@@ -51,8 +51,9 @@ class ShopsRepository extends BaseRepository
         }
 
         if ($tagIds !== null) {
-            $query->whereHas('tags', function ($query) use ($tagIds) {
-                $query->whereIn('tags_id', $tagIds);
+            $tagIdArr = (strpos(',', $tagIds) === false) ? [$tagIds] : explode(',', $tagIds);
+            $query->whereHas('tags', function ($query) use ($tagIdArr) {
+                $query->whereIn('tags_id', $tagIdArr);
             });
         }
 
