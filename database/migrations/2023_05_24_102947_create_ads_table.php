@@ -37,6 +37,18 @@ class CreateAdsTable extends Migration
             $table->string('start_time', 128)->default('')->comment('投放开始时间');
             $table->string('end_time', 128)->default('')->comment('投放结束时间');
             $table->integer('auto_extend_enabled')->default(0)->comment('是否启用智能放量');
+
+            $table->double('stat_cost')->default(0)->comment('消耗');
+            $table->double('convert_cost')->default(0)->comment('转化成本');
+            $table->double('pay_order_amount')->default(0)->comment('直接成交金额');
+            $table->integer('pay_order_count')->default(0)->comment('直接成交单数');
+            $table->double('prepay_and_pay_order_roi')->default(0)->comment('直接支付roi');
+            // $table->double('create_order_roi')->default(0)->comment('直接下单roi');
+
+            //$table->integer('convert_cnt')->default(0)->comment('转化数');
+            //$table->double('convert_rate')->default(0)->comment('转化率');
+
+
             $table->timestamps();
             $table->softDeletes();
 

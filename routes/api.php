@@ -59,6 +59,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('advertiser/{store}/sync/ad', [AdsAPIController::class, 'syncAd']);
 
     Route::get('ads', [AdsAPIController::class, 'index']);
+    Route::get('ads/{id}', [AdsAPIController::class, 'adReport']);
 
     Route::get('alarm_logs', [AlarmLogsAPIController::class, 'index']);
     Route::delete('alarm_logs/{id}', [AlarmLogsAPIController::class, 'destroy']);

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
+use Carbon\Carbon;
 use App\Models\Ads;
+use App\Jobs\AdsJob;
 use App\Models\Shops;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -98,6 +100,19 @@ class AdsAPIController extends AppBaseController
             'updated_num' => $updatedNum
         ];
         return result($result, '同步计划成功！');
+    }
+
+    public function adReport($id)
+    {
+        /** @var Ads $ads */
+        $ads = $this->adsRepository->find($id);
+
+        $accessToken = $ads->advertiser->getShopAccessToken();
+        $adsJob = new AdsJob([$ads->ad_ids], $accessToken);
+
+        $adsJob->delay(Carbon::now()->addSeconds(30));
+        dispatch($adsJob);
+
     }
 
 
